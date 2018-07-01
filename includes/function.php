@@ -16,7 +16,7 @@ function do_notify($url){
 	if(strpos($return,'success')!==false){
 		return true;
 	}else{
-		proxy_get($url);
+		//proxy_get($url);
 	}
 }
 function get_curl($url, $post=0, $referer=0, $cookie=0, $header=0, $ua=0, $nobaody=0)
@@ -367,4 +367,14 @@ function processOrder($srow,$notify=true){
 		do_notify($url['notify']);
 	}
 }
+
+function saveSetting($k, $v)
+{
+    global $DB;
+    $v = daddslashes($v);
+    return $DB->exec("update pay_config set v='" . $v . "' where k='" . $k . "'");
+    //return $DB->query("REPLACE INTO pay_config SET v='" . $v . "',k='" . $k . "'");
+}
+
+
 ?>

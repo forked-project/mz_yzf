@@ -5,18 +5,17 @@
 include("../includes/common.php");
 $title='检查版本更新';
 include './head.php';
-if($islogin==1){}else exit("<script language='javascript'>window.location.href='./login.php';</script>");
-
+include 'PclZip.class.php';
 //函数
 function zipExtract ($src, $dest)
 {
-$zip = new ZipArchive();
-if ($zip->open($src)===true)
-{
-$zip->extractTo($dest);
-$zip->close();
-return true;
-}
+    $pcl=new PclZip($src);
+    if($pcl->extract(
+            PCLZIP_OPT_PATH, $dest,
+            PCLZIP_OPT_REPLACE_NEWER
+    )){
+        return true;
+    }
 return false;
 }
 function deldir($dir) {
@@ -44,39 +43,7 @@ $scriptpath=str_replace('\\','/',$_SERVER['SCRIPT_NAME']);
 $scriptpath = substr($scriptpath, 0, strrpos($scriptpath, '/'));
 $admin_path = substr($scriptpath, strrpos($scriptpath, '/')+1);
 ?>
-  <nav class="navbar navbar-fixed-top navbar-default">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">导航按钮</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="./">拇指付易支付管理中心</a>
-      </div><!-- /.navbar-header -->
-      <div id="navbar" class="collapse navbar-collapse">
-        <ul class="nav navbar-nav navbar-right">
-          <li class="active">
-            <a href="./"><span class="glyphicon glyphicon-home"></span> 平台首页</a>
-          </li>
-		  <li><a href="./order.php"><span class="glyphicon glyphicon-shopping-cart"></span> 订单管理</a></li>
-		  <li>
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cloud"></span> 结算管理<b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              <li><a href="./settle.php">结算操作</a></li>
-			  <li><a href="./slist.php">结算记录</a><li>
-            </ul>
-          </li>
-		  <li><a href="./ulist.php"><span class="glyphicon glyphicon-user"></span> 商户管理</a></li>
-		  <li><a href="./update.php"><span class="glyphicon glyphicon-open"></span> 在线更新</a></li>
-          <li><a href="./login.php?logout"><span class="glyphicon glyphicon-log-out"></span> 退出登陆</a></li>
-        </ul>
-      </div><!-- /.navbar-collapse -->
-    </div><!-- /.container -->
-  </nav><!-- /.navbar -->
-  <div class="container" style="padding-top:70px;">
-    <div class="col-xs-12 col-sm-10 col-lg-8 center-block" style="float: none;">
+
 <div class="panel panel-primary">
 <div class="panel-heading"><h3 class="panel-title">检查更新</h3></div>
 <div class="panel-body">
@@ -112,10 +79,6 @@ $RemoteFile = $res['file'];
 $ZipFile = "Archive.zip";
 copy($RemoteFile,$ZipFile) or die("无法下载更新包文件！".'<a href="update.php">返回上级</a>');
 if (zipExtract($ZipFile,ROOT)) {
-if($admin_path!='admin'){ //修改后台地址
-	deldir(ROOT.$admin_path);
-	rename(ROOT.'admin',ROOT.$admin_path);
-}
 if(function_exists("opcache_reset"))@opcache_reset();
 if(!empty($res['sql'])){
 	$sql=$res['sql'];
