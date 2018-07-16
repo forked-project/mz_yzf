@@ -5,18 +5,22 @@
 include("../includes/common.php");
 if(isset($_POST['user']) && isset($_POST['pass'])){
 	$user=daddslashes($_POST['user']);
-	$pass=daddslashes($_POST['pass']);
-	$userrow=$DB->query("SELECT * FROM pay_user WHERE id='{$user}' limit 1")->fetch();
-	if($user==$userrow['id'] && $pass==$userrow['key']) {
-		if($user_id=$_SESSION['Oauth_alipay_uid']){
-			$DB->exec("update `pay_user` set `alipay_uid` ='$user_id' where `id`='$user'");
+	$pass=md5(daddslashes($_POST['pass']));
+	$userrow=$DB->query("SELECT * FROM mzf_user WHERE user='{$user}' limit 1")->fetch();
+	if($user==$userrow['user'] && $pass==$userrow['pwd']) {
+        $user_id=$_SESSION['Oauth_alipay_uid'];
+        $qq_openid=$_SESSION['Oauth_qq_uid'];
+		if(isset($user_id)){
+		    exit('hello');
+			$DB->exec("update `mzf_user` set `alipay_uid` ='$user_id' where `user`='$user'");
 			unset($_SESSION['Oauth_alipay_uid']);
 		}
-		if($qq_openid=$_SESSION['Oauth_qq_uid']){
-			$DB->exec("update `pay_user` set `qq_uid` ='$qq_openid' where `id`='$user'");
+		if(isset($qq_openid)){
+			$DB->exec("update `mzf_user` set `qq_uid` ='$qq_openid' where `user`='$user'");
 			unset($_SESSION['Oauth_qq_uid']);
 		}
-		$city=get_ip_city($clientip);
+        $city = '';
+		//$city=get_ip_city($clientip);
 		$DB->query("insert into `panel_log` (`uid`,`type`,`date`,`city`,`data`) values ('".$user."','登录用户中心','".$date."','".$city."','".$clientip."')");
 		$session=md5($user.$pass.$password_hash);
 		$expiretime=time()+604800;
@@ -56,30 +60,30 @@ if(isset($_POST['user']) && isset($_POST['pass'])){
 <span class="navbar-brand block m-t"><?php echo $conf['web_name']?></span>
 <div class="m-b-lg">
 <div class="wrapper text-center">
-<strong>请输入您的商户信息</strong>
+<strong>请输入您的账号信息</strong>
 </div>
 <form name="form" class="form-validation" method="post" action="login.php">
 <div class="text-danger wrapper text-center" ng-show="authError">
 </div>
 <div class="list-group list-group-sm swaplogin">
 <div class="list-group-item">
-<input type="text" name="user" placeholder="商户ID" value="<?php echo @$_GET['user']?>" class="form-control no-border" required>
+<input type="text" name="user" placeholder="用户名" value="<?php echo @$_GET['user']?>" class="form-control no-border" required>
 </div>
 <div class="list-group-item">
-<input type="password" name="pass" placeholder="商户密钥" value="<?php echo @$_GET['pass']?>" class="form-control no-border" required>
+<input type="password" name="pass" placeholder="用户密码" value="<?php echo @$_GET['pass']?>" class="form-control no-border" required>
 </div>
 </div>
-<button type="submit" class="btn btn-lg btn-primary btn-block" ng-click="login()" ng-disabled='form.$invalid'>立即登录</button>
+<button type="submit" class="btn btn-lg btn-primary btn-block" ng-disabled='form.$invalid'>立即登录</button>
 <a href="oauth.php" ui-sref="access.signup" class="btn btn-lg btn-default btn-block <?php echo isset($_GET['connect'])||$conf['quicklogin']!=1?'hide':null;?>"><img src="../assets/icon/alipay.ico" width="28px">支付宝快捷登录</a>
 <a href="connect.php" ui-sref="access.signup" class="btn btn-lg btn-default btn-block <?php echo isset($_GET['connect'])||$conf['quicklogin']!=2?'hide':null;?>"><img src="../assets/icon/qqpay.ico" width="28px">ＱＱ快捷登录</a>
 <div class="line line-dashed"></div>
-<a href="reg.php" ui-sref="access.signup" class="btn btn-lg btn-default btn-block <?php echo $conf['is_reg']==0?'hide':null;?>">自助申请商户</a>
-<div class="text-center m-t m-b"><a ui-sref="access.forgotpwd" href="findpwd.php">找回商户信息</a></div>
+<a href="reg.php" ui-sref="access.signup" class="btn btn-lg btn-default btn-block <?php echo $conf['is_reg']==0?'hide':null;?>">注册账号</a>
+<div class="text-center m-t m-b"><a ui-sref="access.forgotpwd" href="findpwd.php">找回密码</a></div>
 </form>
 </div>
 <div class="text-center">
 <p>
-<small class="text-muted"><?php echo $conf['web_name']?><br>&copy; 2016~2017</small>
+<small class="text-muted"><?php echo $conf['web_name']?><br>&copy; 2016~2018</small>
 </p>
 </div>
 </div>

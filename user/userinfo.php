@@ -1,96 +1,99 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: cghang
+ * Date: 2018/7/16
+ * Time: 12:53 PM
+ */
 include("../includes/common.php");
 if($islogin2==1){}else exit("<script language='javascript'>window.location.href='./login.php';</script>");
-$title='修改资料';
+if(!$merchant){showmsg('您还没初始化商户账号,<a href="/user/int.php">点我初始化</a>');exit;}
+$title='修改用户资料';
 include './head.php';
-?>
-<?php
-
 if(strlen($userrow['phone'])==11){
 	$userrow['phone']=substr($userrow['phone'],0,3).'****'.substr($userrow['phone'],7,10);
 }
-
 ?>
 <div id="situation" value="">
  <div id="content" class="app-content" role="main">
+     <div class="modal inmodal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+         <div class="modal-dialog">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                     </button>
+                     <h4 class="modal-title">验证密保信息</h4>
+                 </div>
+                 <div class="modal-body">
+                     <?php if($conf['verifytype']==1){?>
+                         <div class="list-group-item">密保手机：<?php echo $userrow['phone']?></div>
+                         <div class="list-group-item">
+                             <div class="input-group">
+                                 <input type="text" name="code" placeholder="输入短信验证码" class="form-control" required>
+                                 <a class="input-group-addon" id="sendcode">获取验证码</a>
+                             </div>
+                         </div>
+                     <?php }else{?>
+                         <div class="list-group-item">密保邮箱：<?php echo $userrow['email']?></div>
+                         <div class="list-group-item">
+                             <div class="input-group">
+                                 <input type="text" name="code" placeholder="输入验证码" class="form-control" required>
+                                 <a class="input-group-addon" id="sendcode">获取验证码</a>
+                             </div>
+                         </div>
+                     <?php }?>
+                     <button type="button" id="verifycode" class="btn btn-primary btn-block">确定</button>
+                     <div id="embed-captcha"></div>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+     <div class="modal inmodal fade" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+         <div class="modal-dialog">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                     </button>
+                     <h4 class="modal-title">修改密保信息</h4>
+                 </div>
+                 <div class="modal-body">
+                     <?php if($conf['verifytype']==1){?>
+                         <div class="list-group-item">
+                             <input type="text" name="phone_n" placeholder="输入新的手机号码" class="form-control" required>
+                         </div>
+                         <div class="list-group-item">
+                             <div class="input-group">
+                                 <input type="text" name="code_n" placeholder="输入短信验证码" class="form-control" required>
+                                 <a class="input-group-addon" id="sendcode2">获取验证码</a>
+                             </div>
+                         </div>
+                     <?php }else{?>
+                         <div class="list-group-item">
+                             <input type="email" name="email_n" placeholder="输入新的邮箱" class="form-control" required>
+                         </div>
+                         <div class="list-group-item">
+                             <div class="input-group">
+                                 <input type="text" name="code_n" placeholder="输入验证码" class="form-control" required>
+                                 <a class="input-group-addon" id="sendcode2">获取验证码</a>
+                             </div>
+                         </div>
+                     <?php }?>
+                     <button type="button" id="editBind" class="btn btn-primary btn-block">确定</button>
+                     <div id="embed-captcha"></div>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                 </div>
+             </div>
+         </div>
+     </div>
     <div class="app-content-body ">
-		<div class="modal inmodal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
-						</button>
-						<h4 class="modal-title">验证密保信息</h4>
-					</div>
-					<div class="modal-body">
-<?php if($conf['verifytype']==1){?>
-<div class="list-group-item">密保手机：<?php echo $userrow['phone']?></div>
-<div class="list-group-item">
-<div class="input-group">
-<input type="text" name="code" placeholder="输入短信验证码" class="form-control" required>
-<a class="input-group-addon" id="sendcode">获取验证码</a>
-</div>
-</div>
-<?php }else{?>
-<div class="list-group-item">密保邮箱：<?php echo $userrow['email']?></div>
-<div class="list-group-item">
-<div class="input-group">
-<input type="text" name="code" placeholder="输入验证码" class="form-control" required>
-<a class="input-group-addon" id="sendcode">获取验证码</a>
-</div>
-</div>
-<?php }?>
-<button type="button" id="verifycode" class="btn btn-primary btn-block">确定</button>
-<div id="embed-captcha"></div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="modal inmodal fade" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
-						</button>
-						<h4 class="modal-title">修改密保信息</h4>
-					</div>
-					<div class="modal-body">
-<?php if($conf['verifytype']==1){?>
-<div class="list-group-item">
-<input type="text" name="phone_n" placeholder="输入新的手机号码" class="form-control" required>
-</div>
-<div class="list-group-item">
-<div class="input-group">
-<input type="text" name="code_n" placeholder="输入短信验证码" class="form-control" required>
-<a class="input-group-addon" id="sendcode2">获取验证码</a>
-</div>
-</div>
-<?php }else{?>
-<div class="list-group-item">
-<input type="email" name="email_n" placeholder="输入新的邮箱" class="form-control" required>
-</div>
-<div class="list-group-item">
-<div class="input-group">
-<input type="text" name="code_n" placeholder="输入验证码" class="form-control" required>
-<a class="input-group-addon" id="sendcode2">获取验证码</a>
-</div>
-</div>
-<?php }?>
-<button type="button" id="editBind" class="btn btn-primary btn-block">确定</button>
-<div id="embed-captcha"></div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-					</div>
-				</div>
-			</div>
-		</div>
-<div class="bg-light lter b-b wrapper-md hidden-print">
-  <h1 class="m-n font-thin h3">修改资料</h1>
-</div>
+        <div class="bg-light lter b-b wrapper-md hidden-print">
+            <h1 class="m-n font-thin h3">修改用户资料</h1>
+        </div>
 <div class="wrapper-md control">
 <?php if(isset($msg)){?>
 <div class="alert alert-info">
@@ -103,57 +106,6 @@ if(strlen($userrow['phone'])==11){
 		</div>
 		<div class="panel-body">
 			<form class="form-horizontal devform">
-				<h4>商户信息查看：</h4>
-				<div class="form-group">
-					<label class="col-sm-2 control-label">商户ID</label>
-					<div class="col-sm-9">
-						<input class="form-control" type="text" value="<?php echo $pid?>" disabled>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-2 control-label">商户密钥</label>
-					<div class="col-sm-9">
-						<input class="form-control" type="text" value="<?php echo $userrow['key']?>" disabled>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-2 control-label">商户余额</label>
-					<div class="col-sm-9">
-						<input class="form-control" type="text" value="￥<?php echo $userrow['money']?>" disabled>
-					</div>
-				</div>
-				<div class="line line-dashed b-b line-lg pull-in"></div>
-				<h4>收款账号设置：</h4>
-				<div class="form-group">
-					<label class="col-sm-2 control-label">结算方式</label>
-					<div class="col-sm-9">
-						<select class="form-control" name="stype" default="<?php echo $userrow['settle_id']?>">
-						<?php if($conf['stype_1']){?><option value="1">支付宝结算</option>
-						<?php }if($conf['stype_2']){?><option value="2">微信结算</option>
-						<?php }if($conf['stype_3']){?><option value="3">QQ钱包结算</option>
-						<?php }if($conf['stype_4']){?><option value="4">银行卡结算</option>
-						<?php }?></select>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-2 control-label" id="typename">收款账号</label>
-					<div class="col-sm-9">
-						<input class="form-control" type="text" name="account" value="<?php echo $userrow['account']?>">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-2 control-label">真实姓名</label>
-					<div class="col-sm-9">
-						<input class="form-control" type="text" name="username" value="<?php echo $userrow['username']?>">
-					</div>
-				</div>
-				<div class="form-group">
-				  <div class="col-sm-offset-2 col-sm-4"><input type="button" id="editSettle" value="确定修改" class="btn btn-primary form-control"/><br/>
-				 </div>
-				</div>
-
-				<div class="line line-dashed b-b line-lg pull-in"></div>
-				<h4>联系方式设置：</h4>
 				<?php if($conf['verifytype']==1){?>
 				<div class="form-group">
 					<label class="col-sm-2 control-label">手机号码</label>
@@ -187,13 +139,13 @@ if(strlen($userrow['phone'])==11){
 						<input class="form-control" type="text" name="qq" value="<?php echo $userrow['qq']?>">
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="col-sm-2 control-label">网站域名</label>
-					<div class="col-sm-9">
-						<input class="form-control" type="text" name="url" value="<?php echo $userrow['url']?>">
-					</div>
-				</div>
-				
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">密码</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" type="text" name="pwd" value="">
+                        <br><b>密码为空则为不修改</b>
+                    </div>
+                </div>
 				<div class="form-group">
 				  <div class="col-sm-offset-2 col-sm-4"><input type="button" id="editInfo" value="确定修改" class="btn btn-primary form-control"/><br/>
 				 </div>
@@ -254,7 +206,7 @@ var handlerEmbed = function (captchaObj) {
 					layer.alert(data.msg);
 					captchaObj.reset();
 				}
-			} 
+			}
 		});
 	});
 	$('#sendcode').click(function () {
@@ -316,30 +268,17 @@ $(document).ready(function(){
 	$("#editInfo").click(function(){
 		var email=$("input[name='email']").val();
 		var qq=$("input[name='qq']").val();
-		var url=$("input[name='url']").val();
-		if(email=='' || qq=='' || url==''){layer.alert('请确保各项不能为空！');return false;}
+		var pwd=$("input[name='pwd']").val();
+		if(email=='' || qq==''){layer.alert('请确保各项不能为空！');return false;}
 		if(email.length>0){
 			var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
 			if(!reg.test(email)){layer.alert('邮箱格式不正确！');return false;}
 		}
-		if (url.indexOf(" ")>=0){
-			url = url.replace(/ /g,"");
-		}
-		if (url.toLowerCase().indexOf("http://")==0){
-			url = url.slice(7);
-		}
-		if (url.toLowerCase().indexOf("https://")==0){
-			url = url.slice(8);
-		}
-		if (url.slice(url.length-1)=="/"){
-			url = url.slice(0,url.length-1);
-		}
-		$("input[name='url']").val(url);
 		var ii = layer.load(2, {shade:[0.1,'#fff']});
 		$.ajax({
 			type : "POST",
 			url : "ajax2.php?act=edit_info",
-			data : {email:email,qq:qq,url:url},
+			data : {email:email,qq:qq,pwd:pwd},
 			dataType : 'json',
 			success : function(data) {
 				layer.close(ii);

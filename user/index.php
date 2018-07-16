@@ -1,12 +1,18 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: cghang
+ * Date: 2018/7/16
+ * Time: 1:40 AM
+ */
 include("../includes/common.php");
 if($islogin2==1){}else exit("<script language='javascript'>window.location.href='./login.php';</script>");
 $title='用户中心';
+if(!$merchant){showmsg('您还没初始化商户账号,<a href="/user/int.php">点我初始化</a>');exit;}
 include './head.php';
 ?>
 <?php
 $orders=$DB->query("SELECT count(*) from pay_order WHERE pid={$pid}")->fetchColumn();
-
 $lastday=date("Y-m-d",strtotime("-1 day")).' 00:00:00';
 $today=date("Y-m-d").' 00:00:00';
 $order_today=$DB->query("SELECT sum(money) from pay_order where pid={$pid} and status=1 and endtime>='$today'")->fetchColumn();
@@ -27,8 +33,8 @@ while($row = $rs->fetch())
 }
 $chart=substr($chart,0,-1);
 
-if($conf['verifytype']==1 && empty($userrow['phone']))$alertinfo='你还没有绑定密保手机，请&nbsp;<a href="userinfo.php" class="btn btn-sm btn-info">尽快绑定</a>';
-elseif(empty($userrow['email']))$alertinfo='你还没有绑定密保邮箱，请&nbsp;<a href="userinfo.php" class="btn btn-sm btn-info">尽快绑定</a>';
+if($conf['verifytype']==1 && empty($userrow['phone']))$alertinfo= '你还没有绑定密保手机，请&nbsp;<a href="merchant.php" class="btn btn-sm btn-info">尽快绑定</a>';
+elseif(empty($userrow['email']))$alertinfo= '你还没有绑定密保邮箱，请&nbsp;<a href="merchant.php" class="btn btn-sm btn-info">尽快绑定</a>';
 ?>
  <div id="content" class="app-content" role="main">
     <div class="app-content-body ">
@@ -101,7 +107,7 @@ elseif(empty($userrow['email']))$alertinfo='你还没有绑定密保邮箱，请
                   <div ng-init="d3_3=[60,40]" ui-jq="sparkline" ui-options="[60,40], {type:'pie', height:40, sliceColors:['#fad733','#fff']}" class="sparkline inline"></div>
                 </div>
                 <div class="col dk padder-v r-r">
-                  <div class="text-primary-dk font-thin h1"><span>￥<?php echo $userrow['money']?></span></div>
+                  <div class="text-primary-dk font-thin h1"><span>￥<?php echo $merchant['money']?></span></div>
                   <span class="text-muted text-xs">商户当前余额</span>
                 </div>
               </div>
@@ -150,7 +156,7 @@ elseif(empty($userrow['email']))$alertinfo='你还没有绑定密保邮箱，请
 				<div class="form-group">
 					<label class="col-sm-2 control-label">商户密钥</label>
 					<div class="col-sm-9">
-						<input class="form-control" type="text" value="<?php echo $userrow['key']?>" disabled>
+						<input class="form-control" type="text" value="<?php echo $merchant['key']?>" disabled>
 					</div>
 				</div>
 				<div class="line line-dashed b-b line-lg pull-in"></div>

@@ -332,7 +332,7 @@ html{background:#eee}body{background:#fff;color:#333;font-family:"微软雅黑",
 
 function creat_callback($data){
 	global $DB;
-	$userrow=$DB->query("SELECT * FROM pay_user WHERE id='{$data['pid']}' limit 1")->fetch();
+	$userrow=$DB->query("SELECT * FROM mzf_merchant WHERE id='{$data['pid']}' limit 1")->fetch();
 	$array=array('pid'=>$data['pid'],'trade_no'=>$data['trade_no'],'out_trade_no'=>$data['out_trade_no'],'type'=>$data['type'],'name'=>$data['name'],'money'=>$data['money'],'trade_status'=>'TRADE_SUCCESS');
 	$arg=argSort(paraFilter($array));
 	$prestr=createLinkstring($arg);
@@ -356,12 +356,12 @@ function getdomain($url){
 
 function processOrder($srow,$notify=true){
 	global $DB,$conf;
-	$rate=$DB->query("SELECT rate FROM pay_user WHERE id='{$srow['pid']}'")->fetchColumn();
+	$rate=$DB->query("SELECT rate FROM mzf_merchant WHERE id='{$srow['pid']}'")->fetchColumn();
 	if(!(!empty($rate) && $rate>=$conf['money_rate'] && $rate<100)){
 		$rate = $conf['money_rate'];
 	}
 	$addmoney=round($srow['money']*$rate/100,2);
-	$DB->exec("update pay_user set money=money+{$addmoney} where id='{$srow['pid']}'");
+	$DB->exec("update mzf_merchant set money=money+{$addmoney} where id='{$srow['pid']}'");
 	if($notify==true){
 		$url=creat_callback($srow);
 		do_notify($url['notify']);
@@ -372,7 +372,7 @@ function saveSetting($k, $v)
 {
     global $DB;
     $v = daddslashes($v);
-    return $DB->exec("update pay_config set v='" . $v . "' where k='" . $k . "'");
+    return $DB->exec("update mzf_config set v='" . $v . "' where k='" . $k . "'");
     //return $DB->query("REPLACE INTO pay_config SET v='" . $v . "',k='" . $k . "'");
 }
 

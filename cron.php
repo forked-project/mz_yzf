@@ -6,7 +6,7 @@ if($_GET['do']=='settle'){
 	$row=$DB->query("SELECT * FROM pay_batch WHERE time>='{$thtime}' limit 1")->fetch();
 	if($row)exit('batch list is already created');
 	$limit='1000';
-	$rs=$DB->query("SELECT * from pay_user where (money>={$conf['settle_money']} or apply=1) and account is not null and username is not null and type!=2 limit {$limit}");
+	$rs=$DB->query("SELECT * from mzf_merchant where (money>={$conf['settle_money']} or apply=1) and type!=2 limit {$limit}");
 	$batch=date("Ymd").rand(111,999);
 	$i=0;
 	$allmoney=0;
@@ -29,7 +29,7 @@ $thtime=date("Y-m-d H:i:s",time()-3600*6);
 
 $DB->exec("delete from pay_order where status=0 and addtime<'{$thtime}'");
 
-$rs=$DB->query("SELECT * from pay_user where money!='0.00'");
+$rs=$DB->query("SELECT * from mzf_merchant where money!='0.00'");
 
 $allmoney=0;
 while($row = $rs->fetch())

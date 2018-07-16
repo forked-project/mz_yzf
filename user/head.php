@@ -61,7 +61,7 @@ if($userrow['active']==0){
                 <img src="<?php echo ($userrow['qq'])?'//q2.qlogo.cn/headimg_dl?bs=qq&dst_uin='.$userrow['qq'].'&src_uin='.$userrow['qq'].'&fid='.$userrow['qq'].'&spec=100&url_enc=0&referer=bu_interface&term_type=PC':'assets/img/user.png'?>">
                 <i class="on md b-white bottom"></i>
               </span>
-              <span class="hidden-sm hidden-md" style="text-transform:uppercase;"><?php echo $pid?></span> <b class="caret"></b>
+              <span class="hidden-sm hidden-md" style="text-transform:uppercase;"><?php echo $user?></span> <b class="caret"></b>
             </a>
             <!-- dropdown -->
             <ul class="dropdown-menu animated fadeInRight w">
@@ -71,7 +71,7 @@ if($userrow['active']==0){
                 </a>
               </li>
               <li>
-                <a href="userinfo.php">
+                <a href="merchant.php">
                   <span>修改资料</span>
                 </a>
               </li>
@@ -113,30 +113,40 @@ if($userrow['active']==0){
                     <i class="fa fa-fw fa-angle-down text-active"></i>
                   </span>
                   <i class="glyphicon glyphicon-leaf icon text-success-lter"></i>
-                  <span>账户安全</span>
+                  <span>信息管理</span>
                 </a>
                 <ul class="nav nav-sub dk">
                   <li class="nav-sub-header">
                     <a href>
-                      <span>账户安全</span>
+                      <span>信息管理</span>
                     </a>
                   </li>
 				  <li>
-                    <a href="userinfo.php">
-                      <span>修改资料</span>
-                    </a>
-                  </li> 
-                  <li>
-                    <a href="verification.php" onclick="alert('暂未开放');return false;">
-                      <span>验证信息</span>
+                    <a href="merchant.php">
+                      <span>商户管理</span>
                     </a>
                   </li>
+                    <li>
+                        <a href="userinfo.php">
+                            <span>用户管理</span>
+                        </a>
+                    </li>
                 </ul>
               </li>
               <li class="line dk"></li>
               <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
-                <span>查询</span>
+                <span>操作</span>
               </li>
+                <?php
+                if($conf['settle_open']==1){
+                ?>
+                <li>
+                    <a href="apply.php">
+                        <i class="glyphicon glyphicon-euro"></i>
+                        <span>申请结算</span>
+                    </a>
+                </li>
+                <?php } ?>
 			  <li>
                 <a href="order.php">
                   <i class="glyphicon glyphicon-list-alt"></i>

@@ -42,6 +42,7 @@ echo '" class="form-control" required/></div>
 echo $conf['appkey'];
 echo '" class="form-control"/></div>
 	</div>
+	<div class="col-sm-offset-2 col-sm-10"> <b>以上信息请到https://www.mzhipay.com获取</b></div>
 	<div class="form-group">
 	  <div class="col-sm-offset-2 col-sm-10"><input type="submit" name="submit" value="修改" class="btn btn-primary form-control"/><br/>
 	 </div>

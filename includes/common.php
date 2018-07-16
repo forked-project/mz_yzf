@@ -26,7 +26,7 @@ try {
     exit('链接数据库失败:'.$e->getMessage());
 }
 $DB->exec("set names utf8");
-$DB->query('select * from pay_config where 1')->fetch();
+$DB->query('select * from mzf_config where 1')->fetch();
 include(SYSTEM_ROOT . 'cache.class.php');
 $CACHE = new CACHE();
 $conf = unserialize($CACHE->read());

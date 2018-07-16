@@ -37,7 +37,7 @@ if(isset($_GET['pid'])){
 $prestr=createLinkstring(argSort(paraFilter($dataarr)));
 $pid=intval($dataarr['pid']);
 if(empty($pid))sysmsg('PID不存在');
-$userrow=$DB->query("SELECT * FROM pay_user WHERE id='{$pid}' limit 1")->fetch();
+$userrow=$DB->query("SELECT * FROM mzf_merchant WHERE id='{$pid}' limit 1")->fetch();
 if(!md5Verify($prestr, $dataarr['sign'], $userrow['key']))sysmsg('签名校验失败，请返回重试！');
 if($userrow['active']==0)sysmsg('商户已封禁，无法支付！');
 $type=daddslashes($dataarr['type']);

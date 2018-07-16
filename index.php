@@ -44,7 +44,7 @@ include ("./includes/common.php");
                         </li>
                     </ul>
                 </li>
-                <li><a href="/user/reg.php?my=add" class="button">申请商户</a></li>
+
             </ul>
         </nav>
     </header>
@@ -53,10 +53,20 @@ include ("./includes/common.php");
     <section id="banner">
         <h2><?=$conf['web_name']?> - <?=$conf['web_name_end']?></h2>
         <p>提供免签约支付宝、QQ钱包、微信、财付通支付.</p>
-        <ul class="actions">
-            <li><a href="/user" class="button">登陆商户</a></li>
-            <li><a href="/user/reg.php?my=add" class="button">在线注册</a></li>
-        </ul>
+        <?php
+        if($islogin2==1){
+?>
+            <ul class="actions">
+                <li><a href="/user/login.php" class="button">登陆账号</a></li>
+                <li><a href="/user/reg.php" class="button">在线注册</a></li>
+            </ul>
+  <?php      }else { ?>
+            <ul class="actions">
+                <li><a href="/user" class="button">用户中心</a></li>
+            </ul>
+            <?php
+        }
+        ?>
     </section>
 
     <!-- Main -->

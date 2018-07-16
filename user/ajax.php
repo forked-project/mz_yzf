@@ -20,13 +20,13 @@ case 'captcha':
 break;
 case 'sendcode':
 	$email=trim(daddslashes($_POST['email']));
-	if($conf['is_reg']==0)exit('{"code":-1,"msg":"未开放商户申请"}');
+	if($conf['is_reg']==0)exit('{"code":-1,"msg":"未开放账号注册"}');
 	if(isset($_SESSION['send_mail']) && $_SESSION['send_mail']>time()-10){
 		exit('{"code":-1,"msg":"请勿频繁发送验证码"}');
 	}
-	$row=$DB->query("select * from pay_user where email='$email' limit 1")->fetch();
+	$row=$DB->query("select * from mzf_user where email='$email' limit 1")->fetch();
 	if($row){
-		exit('{"code":-1,"msg":"该邮箱已经注册过商户，如需找回商户信息，请返回登录页面点击找回商户"}');
+		exit('{"code":-1,"msg":"该邮箱已经注册过本站，如需找回密码，请返回登录页面点击找回密码"}');
 	}
 	$row=$DB->query("select * from pay_regcode where email='$email' order by id desc limit 1")->fetch();
 	if($row['time']>time()-60){
@@ -58,7 +58,7 @@ case 'sendcode':
 break;
 case 'sendsms':
 	$phone=trim(daddslashes($_POST['phone']));
-	if($conf['is_reg']==0)exit('{"code":-1,"msg":"未开放商户申请"}');
+	if($conf['is_reg']==0)exit('{"code":-1,"msg":"未开放账号注册"}');
 	if(isset($_SESSION['send_mail']) && $_SESSION['send_mail']>time()-10){
 		exit('{"code":-1,"msg":"请勿频繁发送验证码"}');
 	}
@@ -85,9 +85,9 @@ case 'sendsms':
 			exit('{"code":-1,"msg":"验证失败，请重新验证"}');
 		}
 	}
-	$row=$DB->query("select * from pay_user where phone='$phone' limit 1")->fetch();
+	$row=$DB->query("select * from mzf_user where phone='$phone' limit 1")->fetch();
 	if($row){
-		exit('{"code":-1,"msg":"该手机号已经注册过商户，如需找回商户信息，请返回登录页面点击找回商户"}');
+		exit('{"code":-1,"msg":"该手机号已经注册过本站，如需找回密码，请返回登录页面点击找回密码"}');
 	}
 	$row=$DB->query("select * from pay_regcode where email='$phone' order by id desc limit 1")->fetch();
 	if($row['time']>time()-60){
@@ -116,39 +116,25 @@ case 'sendsms':
 break;
 case 'reg':
 	$type=intval($_POST['type']);
-	$account=trim(strip_tags(daddslashes($_POST['account'])));
-	$username=trim(strip_tags(daddslashes($_POST['username'])));
-	$url=trim(strip_tags(daddslashes($_POST['url'])));
+	$user=trim(strip_tags(daddslashes($_POST['user'])));
+	$pwd=md5(trim(strip_tags(daddslashes($_POST['pwd']))));
 	$email=trim(strip_tags(daddslashes($_POST['email'])));
 	$phone=trim(strip_tags(daddslashes($_POST['phone'])));
 	$code=trim(strip_tags(daddslashes($_POST['code'])));
 
-	if($conf['is_reg']==0)exit('{"code":-1,"msg":"未开放商户申请"}');
+	if($conf['is_reg']==0)exit('{"code":-1,"msg":"未开放账号注册"}');
 	if(isset($_SESSION['reg_submit']) && $_SESSION['reg_submit']>time()-600){
 		exit('{"code":-1,"msg":"请勿频繁注册"}');
 	}
 	if($conf['verifytype']==1){
-		$row=$DB->query("select * from pay_user where phone='$phone' limit 1")->fetch();
+		$row=$DB->query("select * from mzf_user where phone='$phone' limit 1")->fetch();
 		if($row){
-			exit('{"code":-1,"msg":"该手机号已经注册过商户，如需找回商户信息，请返回登录页面点击找回商户"}');
+			exit('{"code":-1,"msg":"该手机号已经注册过本站，如需找回密码，请返回登录页面点击找回密码"}');
 		}
 	}
-	$row=$DB->query("select * from pay_user where email='$email' limit 1")->fetch();
+	$row=$DB->query("select * from mzf_user where email='$email' limit 1")->fetch();
 	if($row){
-		exit('{"code":-1,"msg":"该邮箱已经注册过商户，如需找回商户信息，请返回登录页面点击找回商户"}');
-	}
-	$row=$DB->query("select * from pay_user where account='$account' limit 1")->fetch();
-	if($row){
-		exit('{"code":-1,"msg":"当前结算账号对应商户已存在，如需找回商户信息，请返回登录页面点击找回商户"}');
-	}
-	if($type==1 && strlen($account)!=11 && strpos($account,'@')==false){
-		exit('{"code":-1,"msg":"请填写正确的支付宝账号！"}');
-	}
-	if($type==2 && strlen($account)<3){
-		exit('{"code":-1,"msg":"请填写正确的微信'.$$username[$url].'"}');
-	}
-	if(strlen($url)<4 || strpos($url,'.')==false){
-		exit('{"code":-1,"msg":"请填写正确的网站域名！"}');
+		exit('{"code":-1,"msg":"该邮箱已经注册过本站，如需找回密码，请返回登录页面点击找回密码"}');
 	}
 	if($conf['verifytype']==0 && !preg_match('/^[A-z0-9._-]+@[A-z0-9._-]+\.[A-z0-9._-]+$/', $email)){
 		exit('{"code":-1,"msg":"邮箱格式不正确"}');
@@ -173,9 +159,9 @@ case 'reg':
 		$trade_no=date("YmdHis").rand(11111,99999);
 		$out_trade_no=date("YmdHis").rand(111,999);
 		$domain=getdomain($notify_url);
-		if(!$DB->query("insert into `pay_order` (`trade_no`,`out_trade_no`,`notify_url`,`return_url`,`type`,`pid`,`addtime`,`name`,`money`,`domain`,`ip`,`status`) values ('".$trade_no."','".$out_trade_no."','".$notify_url."','".$return_url."','no','".$conf['reg_pid']."','".$date."','商户申请','".$conf['reg_price']."','".$domain."','".$clientip."','0')"))exit('{"code":-1,"msg":"创建订单失败，请返回重试！"}');
+		if(!$DB->query("insert into `pay_order` (`trade_no`,`out_trade_no`,`notify_url`,`return_url`,`type`,`pid`,`addtime`,`name`,`money`,`domain`,`ip`,`status`) values ('".$trade_no."','".$out_trade_no."','".$notify_url."','".$return_url."','no','".$conf['reg_pid']."','".$date."','账号注册','".$conf['reg_price']."','".$domain."','".$clientip."','0')"))exit('{"code":-1,"msg":"创建订单失败，请返回重试！"}');
 
-		$data = $type.'|'.$account.'|'.$username.'|'.$url.'|'.$email.'|'.$clientip;
+		$data = $user.'|'.$pwd.'|'.$phone.'|'.$email.'|'.$clientip;
 		$sds=$DB->exec("UPDATE `pay_regcode` SET `trade_no`='$trade_no',`data`='$data' WHERE `id`='{$row['id']}'");
 		if($sds){
 			exit('{"code":2,"msg":"订单创建成功！","trade_no":"'.$trade_no.'","need":"'.$conf['reg_price'].'"}');
@@ -183,18 +169,19 @@ case 'reg':
 			exit('{"code":-1,"msg":"订单创建失败！'.$DB->errorCode().'"}');
 		}
 	}else{
-		$key = random(32);
-		$sds=$DB->exec("INSERT INTO `pay_user` (`key`, `account`, `username`, `money`, `url`, `email`, `phone`, `addtime`, `type`, `active`) VALUES ('{$key}', '{$account}', '{$username}', '0', '{$url}', '{$email}', '{$phone}', '{$date}', '0', '1')");
-		$pid=$DB->lastInsertId();
+		$token = random(32);
+		$sds=$DB->exec("INSERT INTO `mzf_user` (`token`,`user`, `pwd`, `email`, `phone`, `addtime`, `type`, `active`) VALUES ('{$token}', '{$user}', '{$pwd}', '{$email}', '{$phone}', '{$date}', '0', '1')");
+		//$pid=$DB->lastInsertId();
 		if($sds){
 			$sub = $conf['web_name'].' - 注册成功通知';
-			$msg = '<h2>商户注册成功通知</h2>感谢您注册'.$conf['web_name'].'！<br/>您的商户ID：'.$pid.'<br/>您的商户秘钥：'.$key.'<br/>'.$conf['web_name'].'官网：<a href="http://'.$_SERVER['HTTP_HOST'].'/" target="_blank">'.$_SERVER['HTTP_HOST'].'</a><br/>【<a href="'.$siteurl.'" target="_blank">商户管理后台</a>】';
+			$msg = '<h2>账号注册成功通知</h2>感谢您注册'.$conf['web_name'].'！<br/>您的登陆账号：'.$user.'<br/>您的账号密码：'.$pwd.'<br/>'.$conf['web_name'].'官网：<a href="http://'.$_SERVER['HTTP_HOST'].'/" target="_blank">'.$_SERVER['HTTP_HOST'].'</a><br/>【<a href="'.$siteurl.'" target="_blank">立即登陆</a>】';
 			$result = send_mail($email, $sub, $msg);
 			$DB->exec("update `pay_regcode` set `status` ='1' where `id`='{$row['id']}'");
 			$_SESSION['reg_submit']=time();
-			exit('{"code":1,"msg":"申请商户成功！","pid":"'.$pid.'","key":"'.$key.'"}');
+			exit('{"code":1,"msg":"注册账号成功！","pid":"'.$user.'","key":"已加密"}');
 		}else{
-			exit('{"code":-1,"msg":"申请商户失败！'.$DB->errorCode().'"}');
+		    //print_r($DB->errorInfo());
+			exit('{"code":-1,"msg":"注册账号失败！'.$DB->errorCode().'"}');
 		}
 	}
 break;
@@ -203,16 +190,16 @@ case 'find':
 	if(isset($_SESSION['find_mail']) && $_SESSION['find_mail']>time()-600){
 		exit('{"code":-1,"msg":"请勿频繁发送邮件，如果未收到请尝试在垃圾邮件箱寻找"}');
 	}
-	$row=$DB->query("select * from pay_user where email='$email' limit 1")->fetch();
+	$row=$DB->query("select * from mzf_user where email='$email' limit 1")->fetch();
 	if(!$row){
-		exit('{"code":-1,"msg":"该邮箱未注册过商户，如需找回请联系客服"}');
+		exit('{"code":-1,"msg":"该邮箱未注册过本站，如需找回请联系客服"}');
 	}
 	$scriptpath=str_replace('\\','/',$_SERVER['SCRIPT_NAME']);
 	$sitepath = substr($scriptpath, 0, strrpos($scriptpath, '/'));
 	$siteurl = ($_SERVER['SERVER_PORT'] == '443' ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$sitepath.'/';
-	$sub = $conf['web_name'].' - 商户信息找回';
+	$sub = $conf['web_name'].' - 账号信息找回';
 	$code = rand(1111111,9999999);
-	$msg = '商户信息找回<br/>您的商户ID：'.$row['id'].'<br/>您的商户秘钥：'.$row['key'].'<br/>'.$conf['web_name'].'官网：<a href="http://'.$_SERVER['HTTP_HOST'].'/" target="_blank">'.$_SERVER['HTTP_HOST'].'</a><br/>【<a href="'.$siteurl.'" target="_blank">商户管理后台</a>】';
+	$msg = '账号信息找回<br/>您的登陆账号：'.$row['id'].'<br/>您的登陆密码：'.$row['key'].'<br/>'.$conf['web_name'].'官网：<a href="http://'.$_SERVER['HTTP_HOST'].'/" target="_blank">'.$_SERVER['HTTP_HOST'].'</a><br/>【<a href="'.$siteurl.'" target="_blank">账号管理后台</a>】';
 	$result = send_mail($email, $sub, $msg);
 	if($result===true){
 		$_SESSION['find_mail']=time();

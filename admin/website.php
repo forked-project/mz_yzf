@@ -292,6 +292,7 @@ $("select[name=\'mail_cloud\']").change(function(){
 	<div class="form-group">
 	  <div class="col-sm-offset-2 col-sm-10"><input type="submit" name="submit" value="修改" class="btn btn-primary form-control"/><br/>
 	 </div>
+	<div class="col-sm-offset-2 col-sm-10"> <b>以上信息请到https://api.smszx.cn获取</b></div>
 	</div>
 
   </form>
@@ -387,7 +388,7 @@ $("select[name=\'mail_cloud\']").change(function(){
     echo $conf['is_reg'];
     echo '">';
     echo $is_reg = $conf['is_reg'] == '0'?'<option value="0">关闭(当前)</option>':'<option value="1">开启(当前)</option>';
-    echo '<option value="0">开启</option><option value="1">关闭</option></select></div>
+    echo '<option value="1">开启</option><option value="0">关闭</option></select></div>
 	</div>
 		<div class="form-group">
 	  <label class="col-sm-2 control-label">付费申请</label>
@@ -395,7 +396,7 @@ $("select[name=\'mail_cloud\']").change(function(){
     echo $conf['is_payreg'];
     echo '">';
     echo $is_payreg = $conf['is_payreg'] == '0'?'<option value="0">关闭(当前)</option>':'<option value="1">开启(当前)</option>';
-    echo '<option value="0">开启</option><option value="1">关闭</option></select></div>
+    echo '<option value="1">开启</option><option value="0">关闭</option></select></div>
 	</div>
 	<div class="form-group">
 	  <label class="col-sm-2 control-label">注册验证类型</label>

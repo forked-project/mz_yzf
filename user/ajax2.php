@@ -178,19 +178,30 @@ break;
 case 'edit_info':
 	$email=daddslashes(strip_tags($_POST['email']));
 	$qq=daddslashes(strip_tags($_POST['qq']));
-	$url=daddslashes(strip_tags($_POST['url']));
+	$pwd=daddslashes(strip_tags($_POST['pwd']));
 
-	if($qq==null || $url==null){
+	if($qq==null){
 		exit('{"code":-1,"msg":"请确保每项都不为空"}');
 	}
 	if($conf['verifytype']==1){
-		$sqs=$DB->exec("update `pay_user` set `email` ='{$email}',`qq` ='{$qq}',`url` ='{$url}' where `id`='$pid'");
+	    if($pwd == ''){
+            $sqs=$DB->exec("update `mzf_user` set `email` ='{$email}',`qq` ='{$qq}' where `user`='$user'");
+        }else{
+	        $pwd = md5($pwd);
+            $sqs=$DB->exec("update `mzf_user` set `email` ='{$email}',`qq` ='{$qq}',`pwd` ='{$pwd}' where `user`='$user'");
+        }
 	}else{
-		$sqs=$DB->exec("update `pay_user` set `qq` ='{$qq}',`url` ='{$url}' where `id`='$pid'");
+        if($pwd == ''){
+            $sqs=$DB->exec("update `mzf_user` set `qq` ='{$qq}' where `user`='$user'");
+        }else{
+            $pwd = md5($pwd);
+            $sqs=$DB->exec("update `mzf_user` set `qq` ='{$qq}',`pwd` ='{$pwd}' where `user`='$user'");
+        }
 	}
 	if($sqs || $DB->errorCode()=='0000'){
 		exit('{"code":1,"msg":"succ"}');
 	}else{
+	    //print_r($DB->errorInfo());
 		exit('{"code":-1,"msg":"保存失败！'.$DB->errorCode().'"}');
 	}
 break;

@@ -17,8 +17,8 @@ CREATE TABLE `pay_order` (
  PRIMARY KEY (`trade_no`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `pay_user`;
-CREATE TABLE `pay_user` (
+DROP TABLE IF EXISTS `mzf_merchant`;
+CREATE TABLE `mzf_merchant` (
 `id` int(11) NOT NULL auto_increment,
 `uid` int(11) DEFAULT NULL,
 `key` varchar(32) NOT NULL,
@@ -111,13 +111,13 @@ CREATE TABLE `pay_regcode` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE `pay_config` (
+CREATE TABLE `mzf_config` (
   `k` varchar(32) NOT NULL,
   `v` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-INSERT INTO `pay_config` (`k`, `v`) VALUES
+INSERT INTO `mzf_config` (`k`, `v`) VALUES
 ('access_token', ''),
 ('admin_pwd', 'admin'),
 ('admin_user', 'admin'),
@@ -163,12 +163,33 @@ INSERT INTO `pay_config` (`k`, `v`) VALUES
 --
 
 --
--- Indexes for table `pay_config`
+-- Indexes for table `mzf_config`
 --
-ALTER TABLE `pay_config`
+ALTER TABLE `mzf_config`
   ADD PRIMARY KEY (`k`);
 COMMIT;
 
-INSERT INTO `pay_config` (`k`, `v`) VALUES ('alipay_type', '0');
-INSERT INTO `pay_config` (`k`, `v`) VALUES ('wxpay_type', '0');
-INSERT INTO `pay_config` (`k`, `v`) VALUES ('qqpay_type', '0');
+INSERT INTO `mzf_config` (`k`, `v`) VALUES ('alipay_type', '0');
+INSERT INTO `mzf_config` (`k`, `v`) VALUES ('wxpay_type', '0');
+INSERT INTO `mzf_config` (`k`, `v`) VALUES ('qqpay_type', '0');
+
+
+DROP TABLE IF EXISTS `mzf_user`;
+CREATE TABLE `mzf_user` (
+`id` int(11) NOT NULL auto_increment,
+`token` varchar(32) NOT NULL,
+`user` varchar(32) NOT NULL,
+`pwd` varchar(32) NOT NULL,
+`email` varchar(32) DEFAULT NULL,
+`qq` int(11) DEFAULT NULL,
+`phone` varchar(20) DEFAULT NULL,
+`name` varchar(10) DEFAULT NULL,
+`addtime` datetime DEFAULT NULL,
+`logtime` datetime DEFAULT NULL,
+`alipay_uid` varchar(32) DEFAULT NULL,
+`qq_uid` varchar(32) DEFAULT NULL,
+`level` int(1) NOT NULL DEFAULT '1',
+`type` int(1) NOT NULL DEFAULT '0',
+`active` int(1) NOT NULL DEFAULT '0',
+ PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

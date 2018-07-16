@@ -26,7 +26,7 @@ if ($sign == $_GET['sign']) {
         if ($_GET['trade_status'] == 'TRADE_SUCCESS') {
             $DB->query("update `pay_order` set `status` ='1',`endtime` ='$date',`buyer` ='$buyer_email' where `trade_no`='$out_trade_no'");
             $addmoney = round($srow['money'] * $conf['money_rate'] / 100, 2);
-            $DB->query("update pay_user set money=money+{$addmoney} where id='{$srow['pid']}'");
+            $DB->query("update mzf_merchant set money=money+{$addmoney} where id='{$srow['pid']}'");
             $url = creat_callback($srow);
             curl_get($url['notify']);
             //proxy_get($url['notify']);
@@ -42,7 +42,7 @@ if ($sign == $_GET['sign']) {
         if ($srow['status'] == 0) {
             $DB->query("update `pay_order` set `status` ='1',`endtime` ='$date' where `trade_no`='$out_trade_no'");
             $addmoney = round($srow['money'] * $conf['money_rate'] / 100, 2);
-            $DB->query("update pay_user set money=money+{$addmoney} where id='{$srow['pid']}'");
+            $DB->query("update mzf_merchant set money=money+{$addmoney} where id='{$srow['pid']}'");
             echo '<script>window.location.href="' . $url['return'] . '";</script>';
         } else {
             echo '<script>window.location.href="' . $url['return'] . '";</script>';

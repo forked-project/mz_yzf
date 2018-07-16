@@ -2,13 +2,13 @@
 
 include("../includes/common.php");
 
-if($conf['is_reg']==0)sysmsg('未开放商户申请');
+if($conf['is_reg']==0)sysmsg('未开放账号注册');
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8" />
-<title>找回商户信息 | <?php echo $conf['web_name']?></title>
+<title>找回账号信息 | <?php echo $conf['web_name']?></title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <link rel="stylesheet" href="https://template.down.swap.wang/ui/angulr_2.0.1/bower_components/bootstrap/dist/css/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="https://template.down.swap.wang/ui/angulr_2.0.1/bower_components/animate.css/animate.css" type="text/css" />
@@ -24,7 +24,7 @@ if($conf['is_reg']==0)sysmsg('未开放商户申请');
 <span class="navbar-brand block m-t" id="sitename"><?php echo $conf['web_name']?></span>
 <div class="m-b-lg">
 <div class="wrapper text-center">
-<strong>输入您的邮箱来找回商户</strong>
+<strong>输入您的邮箱来找回账号</strong>
 </div>
 <form name="form" class="form-validation">
 <div class="list-group list-group-sm swaplogin">
@@ -38,7 +38,7 @@ if($conf['is_reg']==0)sysmsg('未开放商户申请');
 </div>
 <div class="text-center">
 <p>
-<small class="text-muted"><?php echo $conf['web_name']?><br>&copy; 2016~2017</small>
+<small class="text-muted"><?php echo $conf['web_name']?><br>&copy; 2016~2018</small>
 </p>
 </div>
 </div>
