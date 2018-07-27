@@ -40,14 +40,6 @@ echo '<form action="./plist.php?my=add_submit" method="POST">
 <input type="text" class="form-control" name="url" value="" placeholder="可留空">
 </div>
 <div class="form-group">
-<label>邮箱:</label><br>
-<input type="text" class="form-control" name="email" value="" placeholder="可留空">
-</div>
-<div class="form-group">
-<label>ＱＱ:</label><br>
-<input type="text" class="form-control" name="qq" value="" placeholder="可留空">
-</div>
-<div class="form-group">
 <label>自定义分成比例:</label><br>
 <input type="text" class="form-control" name="rate" value="" placeholder="填写百分数，例如98.5">
 </div>
@@ -95,14 +87,6 @@ echo '<form action="./plist.php?my=edit_submit&id='.$id.'" method="POST">
 <input type="text" class="form-control" name="url" value="'.$row['url'].'" placeholder="可留空">
 </div>
 <div class="form-group">
-<label>邮箱:</label><br>
-<input type="text" class="form-control" name="email" value="'.$row['email'].'" placeholder="可留空">
-</div>
-<div class="form-group">
-<label>ＱＱ:</label><br>
-<input type="text" class="form-control" name="qq" value="'.$row['qq'].'" placeholder="可留空">
-</div>
-<div class="form-group">
 <label>自定义分成比例:</label><br>
 <input type="text" class="form-control" name="rate" value="'.$row['rate'].'" placeholder="填写百分数，例如98.5">
 </div>
@@ -134,8 +118,6 @@ $username=$_POST['username'];
 $money='0.00';
 $url=$_POST['url'];
 $uid=$_POST['uid'];
-$email=$_POST['email'];
-$qq=$_POST['qq'];
 $type=$_POST['type'];
 $rate=$_POST['rate'];
 $active=$_POST['active'];
@@ -143,7 +125,7 @@ if($account==NULL or $username==NULL){
 showmsg('保存错误,请确保加*项都不为空!',3);
 } else {
 $key = random(32);
-$sds=$DB->exec("INSERT INTO `mzf_merchant` (`uid`,`key`, `account`, `username`, `money`, `url`, `addtime`, `type`, `settle_id`, `email`, `qq`, `rate`, `active`) VALUES ('{$uid}', '{$key}', '{$account}', '{$username}', '{$money}', '{$url}', '{$date}', '{$type}', '{$settle_id}', '{$email}', '{$qq}', '{$rate}', '{$active}')");
+$sds=$DB->exec("INSERT INTO `mzf_merchant` (`uid`,`key`, `account`, `username`, `money`, `url`, `addtime`, `type`, `settle_id` , `rate`, `active`) VALUES ('{$uid}', '{$key}', '{$account}', '{$username}', '{$money}', '{$url}', '{$date}', '{$type}', '{$settle_id}', '{$rate}', '{$active}')");
 $pid=$DB->lastInsertId();
 if($sds){
 	showmsg('添加商户成功！商户ID：'.$pid.'<br/>密钥：'.$key.'<br/><br/><a href="./plist.php">>>返回商户列表</a>',1);
@@ -162,15 +144,13 @@ $account=$_POST['account'];
 $username=$_POST['username'];
 $money=$_POST['money'];
 $url=$_POST['url'];
-$email=$_POST['email'];
-$qq=$_POST['qq'];
 $type=$_POST['type'];
 $rate=$_POST['rate'];
 $active=$_POST['active'];
 if($account==NULL or $username==NULL){
 showmsg('保存错误,请确保加*项都不为空!',3);
 } else {
-$sql="update `mzf_merchant` set `account` ='{$account}',`username` ='{$username}',`money` ='{$money}',`url` ='{$url}',`type` ='$type',`settle_id` ='$settle_id',`email` ='$email',`qq` ='$qq',`rate` ='$rate',`active` ='$active' where `id`='$id'";
+$sql="update `mzf_merchant` set `account` ='{$account}',`username` ='{$username}',`money` ='{$money}',`url` ='{$url}',`type` ='$type',`settle_id` ='$settle_id',`rate` ='$rate',`active` ='$active' where `id`='$id'";
 if($_POST['resetkey']==1){
 	$key = random(32);
 	$sqs=$DB->exec("update `mzf_merchant` set `key` ='{$key}' where `id`='$id'");

@@ -24,7 +24,7 @@ if ($mod == 'website_post' && $_POST['do'] == 'submit') {
     $user = $_POST['user'];
     $pwd = $_POST['pwd'];
     if ($web_name == NULL) {
-        showmsg('必填项不能为空！', 3);
+        showmsg('必填项不能为空！', 3);exit;
     }
     saveSetting('web_name', $web_name);
     saveSetting('web_name_end', $web_name_end);
@@ -41,7 +41,7 @@ if ($mod == 'website_post' && $_POST['do'] == 'submit') {
     if ($ad) {
         showmsg('修改成功！', 1);exit;
     } else {
-        showmsg('修改失败！<br/>', 4);
+        showmsg('修改失败！<br/>', 4);exit;
     }
 }elseif ($mod == 'mail' && $_POST['do'] == 'submit') {
     $mail_cloud = $_POST['mail_cloud'];
@@ -64,7 +64,7 @@ if ($mod == 'website_post' && $_POST['do'] == 'submit') {
     if ($ad) {
         showmsg('修改成功！', 1);exit;
     } else {
-        showmsg('修改失败！<br/>', 4);
+        showmsg('修改失败！<br/>', 4);exit;
     }
 }elseif ($mod == 'sendsms_post' && $_POST['do'] == 'submit') {
     $sms_uid = $_POST['sms_uid'];
@@ -76,7 +76,7 @@ if ($mod == 'website_post' && $_POST['do'] == 'submit') {
     if ($ad) {
         showmsg('修改成功！', 1);exit;
     } else {
-        showmsg('修改失败！<br/>', 4);
+        showmsg('修改失败！<br/>', 4);exit;
     }
 }elseif ($mod == 'pay_post' && $_POST['do'] == 'submit') {
     $alipay_type = $_POST['alipay_type'];
@@ -90,7 +90,7 @@ if ($mod == 'website_post' && $_POST['do'] == 'submit') {
     if ($ad) {
         showmsg('修改成功！', 1);exit;
     } else {
-        showmsg('修改失败！<br/>', 4);
+        showmsg('修改失败！<br/>', 4);exit;
     }
 }elseif ($mod == 'captcha_post' && $_POST['do'] == 'submit') {
     $private_key = $_POST['private_key'];
@@ -102,7 +102,7 @@ if ($mod == 'website_post' && $_POST['do'] == 'submit') {
     if ($ad) {
         showmsg('修改成功！', 1);exit;
     } else {
-        showmsg('修改失败！<br/>', 4);
+        showmsg('修改失败！<br/>', 4);exit;
     }
 }elseif ($mod == 'pay_fee_post' && $_POST['do'] == 'submit') {
     $money_rate = $_POST['money_rate'];
@@ -122,7 +122,7 @@ if ($mod == 'website_post' && $_POST['do'] == 'submit') {
     if ($ad) {
         showmsg('修改成功！', 1);exit;
     } else {
-        showmsg('修改失败！<br/>', 4);
+        showmsg('修改失败！<br/>', 4);exit;
     }
 }elseif ($mod == 'reg_post' && $_POST['do'] == 'submit') {
     $is_reg = $_POST['is_reg'];
@@ -146,7 +146,7 @@ if ($mod == 'website_post' && $_POST['do'] == 'submit') {
     if ($ad) {
         showmsg('修改成功！', 1);exit;
     } else {
-        showmsg('修改失败！<br/>', 4);
+        showmsg('修改失败！<br/>', 4);exit;
     }
 }
 
@@ -154,7 +154,7 @@ if ($act == 'mail') {
     echo '<div class="panel panel-primary">
 <div class="panel-heading"><h3 class="panel-title">发信邮箱配置</h3></div>
 <div class="panel-body">
-  <form action="./set.php?mod=mail_n" method="post" class="form-horizontal" role="form"><input type="hidden" name="do" value="submit"/>
+  <form action="./website.php?mod=mail" method="post" class="form-horizontal" role="form"><input type="hidden" name="do" value="submit"/>
     <div class="form-group">
 	  <label class="col-sm-2 control-label">发信模式</label>
 	  <div class="col-sm-10"><select class="form-control" name="mail_cloud" default="';

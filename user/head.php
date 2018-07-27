@@ -25,7 +25,7 @@ if($userrow['active']==0){
   <!-- header -->
   <header id="header" class="app-header navbar" role="menu">
           <!-- navbar header -->
-      <div class="navbar-header bg-dark">
+      <div class="navbar-header bg-info">
         <button class="pull-right visible-xs dk" ui-toggle="show" target=".navbar-collapse">
           <i class="glyphicon glyphicon-cog"></i>
         </button>
@@ -89,7 +89,7 @@ if($userrow['active']==0){
   </header>
   <!-- / header -->
   <!-- aside -->
-  <aside id="aside" class="app-aside hidden-xs bg-dark">
+  <aside id="aside" class="app-aside hidden-xs bg-white">
       <div class="aside-wrap">
         <div class="navi-wrap">
 

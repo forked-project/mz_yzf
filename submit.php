@@ -27,8 +27,8 @@ document.body.appendChild(document.createElement('iframe')).src='javascript:"<sc
 require_once("./includes/common.php");
 require_once("./includes/muzhifu/muzhifu_config.php");
 require_once("./includes/muzhifu/lib/muzhifu_submit.php");
-
-if(isset($_GET['pid'])){
+$pid =$_GET['pid'];
+if(isset($pid)){
 	$dataarr = $_GET;
 }else{
 	$dataarr = $_POST;
@@ -36,7 +36,7 @@ if(isset($_GET['pid'])){
 
 $prestr=createLinkstring(argSort(paraFilter($dataarr)));
 $pid=intval($dataarr['pid']);
-if(empty($pid))sysmsg('PID不存在');
+if(empty($pid))sysmsg('APPID不存在');
 $userrow=$DB->query("SELECT * FROM mzf_merchant WHERE id='{$pid}' limit 1")->fetch();
 if(!md5Verify($prestr, $dataarr['sign'], $userrow['key']))sysmsg('签名校验失败，请返回重试！');
 if($userrow['active']==0)sysmsg('商户已封禁，无法支付！');
@@ -55,19 +55,30 @@ if(empty($money))sysmsg('金额(money)不能为空');
 if($money<=0)sysmsg('金额不合法');
 $trade_no=date("YmdHis").rand(11111,99999);//内部生成订单号
 $domain=getdomain($notify_url);
-	if($type=='alipay')$type='alipay.trade.precreate';//支付宝支付
-	elseif($type=='qqpay')$type='qq.pay.native';//QQ支付
-	elseif($type=='wxpay')$type='wxpay.pay.unifiedorder';//微信支付
-	else $type='alipay.trade.precreate';//默认支付宝支付
+	if($type=='alipay'){
+	    $type='alipay.trade.precreate';//支付宝支付
+        $mz_type = $conf['alipay_type'];
+	}elseif($type=='qqpay'){
+	    $type='qq.pay.native';//QQ支付
+        $mz_type = $conf['qqpay_type'];
+    }elseif($type=='wxpay'){
+	    $type='wxpay.pay.unifiedorder';//微信支付
+        $mz_type = $conf['wxpay_type'];
+    }else{
+	    $type='alipay.trade.precreate';//默认支付宝支付
+        $mz_type = $conf['qqpay_alipay'];
+    }
 if(!$DB->query("insert into `pay_order` (`trade_no`,`out_trade_no`,`notify_url`,`return_url`,`type`,`pid`,`addtime`,`name`,`money`,`domain`,`ip`,`status`) values ('".$trade_no."','".$out_trade_no."','".$notify_url."','".$return_url."','".$type."','".$pid."','".$date."','".$name."','".$money."','".$domain."','".$clientip."','0')"))exit('创建订单失败，请返回重试！');
 $http_to = $_SERVER['SERVER_PORT'] == '443' ? 'https://' : 'http://';
 	//echo $tyep;
-
+    if($mz_type == '-1'){
+         sysmsg('商户已暂停此支付方式!');
+}
 	$params =   [
 	    'appid'        =>  $muzhifu_config['partner'],
 	    'type'        =>  $type,
 	    'addtime'     =>  date('Y-m-d H:i:s'),
-        'mz_type'      => $conf['alipay_type'] //0 默认方式 or 1 本地扫码方式
+        'mz_type'      => $mz_type //0 默认方式 or 1 本地扫码方式
 	];
 
 	$params['mz_content'] = json_encode([
@@ -77,9 +88,9 @@ $http_to = $_SERVER['SERVER_PORT'] == '443' ? 'https://' : 'http://';
 		"notify_url"	=> $http_to.$_SERVER['HTTP_HOST'].'/pay_notify.php',
 		"return_url"	=> $http_to.$_SERVER['HTTP_HOST'].'/pay_return.php'
 	]);
-if($params['mz_type'] == '1'){
+	if($params['mz_type'] == '1'){
     $params['mz_domain'] = $http_to.$_SERVER['HTTP_HOST'];
-}
+          }
 	// 获得签名
 	$sign = Muzhifu::sign($params, $muzhifu_config['key']);
 	$params['sign'] = $sign;
@@ -93,7 +104,7 @@ if($params['mz_type'] == '1'){
 	}
 
 	if (isset($res->url)) {
-        if ($res->type == '1') {
+        if ($res->type == '1') {//拇指付官方跳转
             echo $res->url;
         } else {
             header('Location: '.$res->url);

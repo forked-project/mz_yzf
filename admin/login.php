@@ -11,7 +11,8 @@ if(isset($_POST['user']) && isset($_POST['pass'])){
 		@header('Content-Type: text/html; charset=UTF-8');
 		exit("<script language='javascript'>alert('用户名或密码不正确！');history.go(-1);</script>");
 	}elseif($user==$conf['admin_user'] && $pass==$conf['admin_pwd']) {
-		$city=get_ip_city($clientip);
+		 $city = '';
+	     //$city=get_ip_city($clientip);
 		$DB->query("insert into `panel_log` (`uid`,`type`,`date`,`city`,`data`) values ('1','登录系统','".$date."','".$city."','IP:".$clientip."')");
 		$session=md5($user.$pass.$password_hash);
 		$token=authcode("{$user}\t{$session}", 'ENCODE', SYS_KEY);

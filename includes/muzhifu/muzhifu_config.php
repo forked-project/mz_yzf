@@ -4,7 +4,7 @@
  */
 
 //↓↓↓↓↓↓↓↓↓↓请在这里配置您的基本信息↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-//申请地址www.muzhifu.com
+//申请地址www.mzhipay.com
 //商户ID
 $muzhifu_config['partner']		= $conf['appid'];//从拇指付平台获取的APPID
 
