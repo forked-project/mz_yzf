@@ -38,6 +38,7 @@ if($_POST['submit_int'] && $_GET['act'] == 'int'){
         echo '</div></div></div></div></div>';
     }
 }
+
 echo '<div id="content" class="app-content" role="main">
     <div class="app-content-body "><div class="bg-light lter b-b wrapper-md hidden-print">
   <h1 class="m-n font-thin h3">商户管理</h1>
@@ -45,6 +46,8 @@ echo '<div id="content" class="app-content" role="main">
 </div>
 <div class="wrapper-md control">
 <!-- stats -->
+<div class="alert alert-info alert-dismissable">
+        <a class="alert-link" href="./merchant_bding.php"> 系统升级,已有商户请点击这里绑定</a></div>
       <div class="row"><div class="panel panel-default">
 <div class="panel-heading"><h3 class="panel-title">初始化商户</h3></div>';
 echo '<div class="panel-body">';
@@ -71,4 +74,6 @@ echo '<form action="?act=int" method="POST">
 </div>
 <input type="submit" name="submit_int" class="btn btn-primary btn-block"
 value="确定添加"></form>';
-echo '</div></div></div></div></div></div></div>';
+echo '</div></div></div></div></div></div>';
+
+include "./foot.php";
