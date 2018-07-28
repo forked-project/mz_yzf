@@ -16,7 +16,7 @@ while($row = $rs->fetch())
 {
 	$order_today+=$row['money'];
 }
-$enable_money=round($merchant['money']-$order_today*$conf['money_rate']/100,2);
+$enable_money=round($order_today*$conf['money_rate']/100,2);
 
 if(isset($_GET['act']) && $_GET['act']=='do'){
 	if($_POST['submit']=='申请提现'){
