@@ -10,12 +10,12 @@ if(isset($_GET['reset'])){
 	$batch=$_GET['batch'];
 	unset($_SESSION['privatekey']);
 	exit("<script language='javascript'>window.location.href='./transfer.php?batch={$batch}';</script>");
-}elseif(isset($_POST['batch']) && isset($_POST['privatekey'])){
+}elseif(isset($_POST['batch']) && isset($_POST['access_token'])){
 	$batch=$_POST['batch'];
-	if(strlen($_POST['privatekey'])<20)exit("<script language='javascript'>alert('拇指付ACCESS_TOKEN不正确');history.go(-1);</script>");
-	$_SESSION['privatekey']=$_POST['privatekey'];
+	if(strlen($_POST['access_token'])<20)exit("<script language='javascript'>alert('拇指付ACCESS_TOKEN不正确');history.go(-1);</script>");
+	$_SESSION['access_token']=$_POST['access_token'];
 	exit("<script language='javascript'>window.location.href='./transfer.php?batch={$batch}';</script>");
-}elseif(isset($_GET['batch']) && isset($_SESSION['privatekey'])){
+}elseif(isset($_GET['batch']) && isset($_SESSION['access_token'])){
 	$batch=$_GET['batch'];
 	$count=$DB->query("SELECT * from pay_batch where batch='$batch'")->rowCount();
 	if($count<1)showmsg('批次号不存在');
@@ -181,7 +181,7 @@ $batch=$_GET['batch'];
 			<form action="transfer.php" method="post"><input type="hidden" name="batch" value="<?php echo $batch?>"/>
 			<div class="form-group">
 			<label>拇指付ACCESS_TOKEN：</label><br>
-			<textarea class="form-control" name="privatekey" rows="4" placeholder="填写拇指付ACCESS_TOKEN" required></textarea>
+			<textarea class="form-control" name="access_token" rows="4" placeholder="填写拇指付ACCESS_TOKEN" required></textarea>
 			</div>
 			<div class="form-group text-right">
 			<button type="submit" class="btn btn-primary btn-block" id="save">保存</button>

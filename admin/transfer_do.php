@@ -4,7 +4,7 @@ include("../includes/common.php");
 if($islogin==1){}else exit("<script language='javascript'>window.location.href='./login.php';</script>");
 
 
-if(isset($_SESSION['privatekey'])){}else exit('{"code":-1,"msg":"PrivateKey未定义"}');
+if(isset($_SESSION['access_token'])){}else exit('{"code":-1,"msg":"access_token未定义"}');
 
 $id = isset($_POST['id'])?intval($_POST['id']):exit('{"code":-1,"msg":"ID不能为空"}');
 
@@ -27,26 +27,36 @@ $BizContent = array(
     "skname" => $row['username'], //收款方真实姓名
     "money" => $row['money']    //转账金额
 );
-
-$aop = new AopClient ();
-$aop->setGatewayUrl("https://www.mzhipay.com/Api/Ajax/");
+include("../includes/muzhifu/lib/Mzhipay_AopClient.php");
+$aop = new AopClient();
+$aop->setGatewayUrl("http://source.muzhifu.cc/Api/Ajax/transfer");
 $aop->setBizcontent($BizContent);
-$result = $aop->http();
+$result = $aop->begin();
 $result = json_decode($result,true);
+//print_r($result);
 if($result['code'] == 0){
 $data['code']=0;
 $data['ret']=$result['ret'];
-$data['msg']='success';
+$data['msg']=$result['msg'];
 $data['result']=$result['result'];
-$DB->exec("update `pay_settle` set `transfer_status`='1',`transfer_result`='".$result->$responseNode->order_id."',`transfer_date`='".$result->$responseNode->pay_date."' where `id`='$id'");
+$DB->exec("update `pay_settle` set `transfer_status`='1',`transfer_result`='".$data['result']."',`transfer_date`='".$date."' where `id`='$id'");
 } elseif($result['code'] == 40004) {
 $data['code']=0;
 $data['ret']=$result['ret'];
-$data['msg']='fail';
+$data['msg']=$result['msg'];
 $data['result'] = $result['result'];
 $DB->exec("update `pay_settle` set `transfer_status`='2',`transfer_result`='".$data['result']."' where `id`='$id'");
+} elseif($result['code'] == -1) {
+    $data['code']=-1;
+    $data['ret']=$result['ret'];
+    $data['msg']=$result['msg'];
+    $data['result'] = $result['result'];
+    $DB->exec("update `pay_settle` set `transfer_status`='2',`transfer_result`='".$data['result']."' where `id`='$id'");
 } else {
 $data['code']=-1;
-$data['msg']='未知错误';
+    $data['ret']=$result['ret'];
+    $data['msg']=$result['msg'];
+    $data['result'] = $result['result'];
+    $DB->exec("update `pay_settle` set `transfer_status`='2',`transfer_result`='".$data['result']."' where `id`='$id'");
 }
 echo json_encode($data);
