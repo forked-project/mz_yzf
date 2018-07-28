@@ -169,6 +169,9 @@ ALTER TABLE `mzf_config`
   ADD PRIMARY KEY (`k`);
 COMMIT;
 
+
+ALTER TABLE pay_config RENAME TO mzf_config
+
 INSERT INTO `mzf_config` (`k`, `v`) VALUES ('alipay_type', '0');
 INSERT INTO `mzf_config` (`k`, `v`) VALUES ('wxpay_type', '0');
 INSERT INTO `mzf_config` (`k`, `v`) VALUES ('qqpay_type', '0');
@@ -193,3 +196,5 @@ CREATE TABLE `mzf_user` (
 `active` int(1) NOT NULL DEFAULT '0',
  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+ALTER TABLE pay_user RENAME TO mzf_merchant;

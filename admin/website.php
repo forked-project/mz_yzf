@@ -21,6 +21,7 @@ if ($mod == 'website_post' && $_POST['do'] == 'submit') {
     $web_qq = $_POST['web_qq'];
     $isreg = $_POST['isreg'];
     $quicklogin = $_POST['quicklogin'];
+    $local_domain = $_POST['local_domain'];
     $user = $_POST['user'];
     $pwd = $_POST['pwd'];
     if ($web_name == NULL) {
@@ -31,6 +32,7 @@ if ($mod == 'website_post' && $_POST['do'] == 'submit') {
     saveSetting('keywords', $keywords);
     saveSetting('description', $description);
     saveSetting('web_qq', $web_qq);
+    saveSetting('local_domain', $local_domain);
     saveSetting('is_reg', $isreg);
     saveSetting('quicklogin', $quicklogin);
     saveSetting('admin_user', $user);
@@ -473,6 +475,12 @@ $("select[name=\'mail_cloud\']").change(function(){
 	  <div class="col-sm-10"><input type="text" name="web_name_end" value="';
     echo $conf['web_name_end'];
     echo '" class="form-control"/></div>
+	</div><br/>
+		<div class="form-group">
+	  <label class="col-sm-2 control-label">网站域名(不用http)</label>
+	  <div class="col-sm-10"><input type="text" name="local_domain" value="';
+    echo $conf['local_domain'];
+    echo '" class="form-control"></div>
 	</div><br/>
 	<div class="form-group">
 	  <label class="col-sm-2 control-label">关键字</label>

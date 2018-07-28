@@ -33,7 +33,7 @@ include ("./includes/common.php");
                 <li>
                     <a href="#" class="icon fa-angle-down">菜单栏</a>
                     <ul>
-                        <li><a href="help.html">开发文档</a></li>
+                        <li><a href="help.php">开发文档</a></li>
                         <li><a href="/SDK/">在线测试</a></li>
                         <li>
                             <a href="mailto:<?=$conf['web_qq']?>@qq.com">邮箱联系</a>
