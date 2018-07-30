@@ -2,19 +2,20 @@
 
 include("../includes/common.php");
 if($islogin2==1){}else exit("<script language='javascript'>window.location.href='./login.php';</script>");
+if(!$merchant){showmsg('您还没初始化商户账号,<a href="/user/int.php">点我初始化</a>');exit;}
 $title='订单记录';
 include './head.php';
 ?>
 <?php
 function do_callback($data){
-	global $DB,$userrow;
+	global $DB,$merchant;
 	if($data['status']>=1)$trade_status='TRADE_SUCCESS';
 	else $trade_status='TRADE_FAIL';
 	$array=array('pid'=>$data['pid'],'trade_no'=>$data['trade_no'],'out_trade_no'=>$data['out_trade_no'],'type'=>$data['type'],'name'=>$data['name'],'money'=>$data['money'],'trade_status'=>$trade_status);
 	$arg=argSort(paraFilter($array));
 	$prestr=createLinkstring($arg);
 	$urlstr=createLinkstringUrlencode($arg);
-	$sign=md5Sign($prestr, $userrow['key']);
+	$sign=md5Sign($prestr, $merchant['key']);
 	if(strpos($data['notify_url'],'?'))
 		$url=$data['notify_url'].'&'.$urlstr.'&sign='.$sign.'&sign_type=MD5';
 	else

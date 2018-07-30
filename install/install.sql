@@ -17,8 +17,8 @@ CREATE TABLE `pay_order` (
  PRIMARY KEY (`trade_no`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `pay_user`;
-CREATE TABLE `pay_user` (
+DROP TABLE IF EXISTS `mzf_merchant`;
+CREATE TABLE `mzf_merchant` (
 `id` int(11) NOT NULL auto_increment,
 `uid` int(11) DEFAULT NULL,
 `key` varchar(32) NOT NULL,
@@ -111,19 +111,19 @@ CREATE TABLE `pay_regcode` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE `pay_config` (
+CREATE TABLE `mzf_config` (
   `k` varchar(32) NOT NULL,
   `v` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-INSERT INTO `pay_config` (`k`, `v`) VALUES
+INSERT INTO `mzf_config` (`k`, `v`) VALUES
 ('access_token', ''),
 ('admin_pwd', 'admin'),
 ('admin_user', 'admin'),
 ('appid', ''),
 ('appkey', ''),
-('cache', 'a:38:{s:12:\"access_token\";s:3:\"111\";s:9:\"admin_pwd\";s:5:\"admin\";s:10:\"admin_user\";s:5:\"admin\";s:5:\"appid\";s:4:\"1000\";s:6:\"appkey\";s:4:\"1111\";s:10:\"CAPTCHA_ID\";s:32:\"b31335edde91b2f98dacd393f6ae6de8\";s:11:\"description\";s:287:\"拇指付易支付是一个和彩虹易支付一样的免签约支付产品，可以助你一站式解决网站签约各种支付接口的难题，现拥有支付宝、财付通、QQ钱包、微信支付等免签约支付功能，并有开发文档与SDK，可快速集成到你的网站\";s:9:\"is_payreg\";s:1:\"0\";s:6:\"is_reg\";s:1:\"1\";s:8:\"keywords\";s:134:\"拇指付易支付,支付宝免签约即时到账,财付通免签约,微信免签约支付,QQ钱包免签约,免签约支付,云支付\";s:12:\"local_domain\";s:9:\"localhost\";s:11:\"mail_apikey\";s:0:\"\";s:12:\"mail_apiuser\";s:0:\"\";s:10:\"mail_cloud\";s:1:\"0\";s:9:\"mail_name\";s:14:\"7019732@qq.com\";s:9:\"mail_port\";s:3:\"465\";s:8:\"mail_pwd\";s:6:\"123456\";s:9:\"mail_smtp\";s:11:\"smtp.qq.com\";s:10:\"money_rate\";s:2:\"97\";s:11:\"PRIVATE_KEY\";s:32:\"170d2349acef92b7396c7157eb9d8f47\";s:10:\"quicklogin\";s:1:\"0\";s:7:\"reg_pid\";s:4:\"1000\";s:9:\"reg_price\";s:2:\"10\";s:14:\"settle_fee_max\";s:2:\"20\";s:14:\"settle_fee_min\";s:3:\"0.1\";s:12:\"settle_money\";s:2:\"30\";s:11:\"settle_open\";s:1:\"0\";s:11:\"settle_rate\";s:5:\"0.005\";s:9:\"sms_token\";s:0:\"\";s:7:\"sms_uid\";s:0:\"\";s:7:\"stype_1\";s:1:\"1\";s:7:\"stype_2\";s:1:\"1\";s:7:\"stype_3\";s:1:\"0\";s:7:\"stype_4\";s:1:\"1\";s:10:\"verifytype\";s:1:\"0\";s:8:\"web_name\";s:18:\"拇指付易支付\";s:12:\"web_name_end\";s:23:\"- 免签约支付平台\";s:6:\"web_qq\";s:7:\"7019732\";}'),
+('cache', ''),
 ('CAPTCHA_ID', 'b31335edde91b2f98dacd393f6ae6de8'),
 ('description', '拇指付易支付是一个和彩虹易支付一样的免签约支付产品，可以助你一站式解决网站签约各种支付接口的难题，现拥有支付宝、财付通、QQ钱包、微信支付等免签约支付功能，并有开发文档与SDK，可快速集成到你的网站'),
 ('is_payreg', '0'),
@@ -163,8 +163,38 @@ INSERT INTO `pay_config` (`k`, `v`) VALUES
 --
 
 --
--- Indexes for table `pay_config`
+-- Indexes for table `mzf_config`
 --
-ALTER TABLE `pay_config`
+ALTER TABLE `mzf_config`
   ADD PRIMARY KEY (`k`);
 COMMIT;
+
+
+ALTER TABLE pay_config RENAME TO mzf_config
+
+INSERT INTO `mzf_config` (`k`, `v`) VALUES ('alipay_type', '0');
+INSERT INTO `mzf_config` (`k`, `v`) VALUES ('wxpay_type', '0');
+INSERT INTO `mzf_config` (`k`, `v`) VALUES ('qqpay_type', '0');
+
+
+DROP TABLE IF EXISTS `mzf_user`;
+CREATE TABLE `mzf_user` (
+`id` int(11) NOT NULL auto_increment,
+`token` varchar(32) NOT NULL,
+`user` varchar(32) NOT NULL,
+`pwd` varchar(32) NOT NULL,
+`email` varchar(32) DEFAULT NULL,
+`qq` int(11) DEFAULT NULL,
+`phone` varchar(20) DEFAULT NULL,
+`name` varchar(10) DEFAULT NULL,
+`addtime` datetime DEFAULT NULL,
+`logtime` datetime DEFAULT NULL,
+`alipay_uid` varchar(32) DEFAULT NULL,
+`qq_uid` varchar(32) DEFAULT NULL,
+`level` int(1) NOT NULL DEFAULT '1',
+`type` int(1) NOT NULL DEFAULT '0',
+`active` int(1) NOT NULL DEFAULT '0',
+ PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+ALTER TABLE pay_user RENAME TO mzf_merchant;

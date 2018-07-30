@@ -1,6 +1,7 @@
 <?php
 include("../includes/common.php");
 if($islogin2==1){}else exit("<script language='javascript'>window.location.href='./login.php';</script>");
+if(!$merchant){showmsg('您还没初始化商户账号,<a href="/user/int.php">点我初始化</a>');exit;}
 $title='申请提现';
 include './head.php';
 ?>
@@ -15,17 +16,17 @@ while($row = $rs->fetch())
 {
 	$order_today+=$row['money'];
 }
-$enable_money=round($userrow['money']-$order_today*$conf['money_rate']/100,2);
+$enable_money=round($order_today*$conf['money_rate']/100,2);
 
 if(isset($_GET['act']) && $_GET['act']=='do'){
 	if($_POST['submit']=='申请提现'){
-		if($userrow['apply']==1){
+		if($merchant['apply']==1){
 			exit("<script language='javascript'>alert('你今天已经申请过提现，请勿重复申请！');history.go(-1);</script>");
 		}
 		if($enable_money<$conf['settle_money']){
 			exit("<script language='javascript'>alert('可提现余额不足！');history.go(-1);</script>");
 		}
-		if($userrow['type']==2){
+		if($merchant['type']==2){
 			exit("<script language='javascript'>alert('您的商户出现异常，无法提现');history.go(-1);</script>");
 		}
 		$sqs=$DB->exec("update `pay_user` set `apply` ='1' where `id`='$pid'");
@@ -56,19 +57,19 @@ if(isset($_GET['act']) && $_GET['act']=='do'){
 				<div class="form-group">
 					<label class="col-sm-2 control-label">支付宝账号</label>
 					<div class="col-sm-9">
-						<input class="form-control" type="text" value="<?php echo $userrow['account']?>" disabled>
+						<input class="form-control" type="text" value="<?php echo $merchant['account']?>" disabled>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-2 control-label">支付宝姓名</label>
 					<div class="col-sm-9">
-						<input class="form-control" type="text" value="<?php echo $userrow['username']?>" disabled>
+						<input class="form-control" type="text" value="<?php echo $merchant['username']?>" disabled>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-2 control-label">当前余额</label>
 					<div class="col-sm-9">
-						<input class="form-control" type="text" value="<?php echo $userrow['money']?>" disabled>
+						<input class="form-control" type="text" value="<?php echo $merchant['money']?>" disabled>
 					</div>
 				</div>
 				<div class="form-group">
@@ -85,7 +86,7 @@ if(isset($_GET['act']) && $_GET['act']=='do'){
 					<label class="col-sm-2"></label>
 					<div class="col-sm-6">
 					<h4><span class="glyphicon glyphicon-info-sign"></span>注意事项</h4>
-						当前最低提现金额为<b><?php echo $conf['settle_money']?></b>元<br/>
+						当前最低提现金额为 <b><?php echo $conf['settle_money']?></b> 元<br/>
 						申请提现后，你的款项将在T+1工作日内下发到指定账户内。
 					</div>
 				</div>

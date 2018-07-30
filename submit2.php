@@ -28,7 +28,7 @@ require_once(SYSTEM_ROOT."muzhifu/lib/muzhifu_submit.php");
 @header('Content-Type: text/html; charset=UTF-8');
 $type=daddslashes($_GET['type']);
 $trade_no=daddslashes($_GET['trade_no']);
-$row=$DB->query("SELECT * FROM pay_order WHERE trade_no='{$trade_no}' limit 1")->fetch();
+$row=$DB->query("SELECT * FROM mzf_merchant WHERE trade_no='{$trade_no}' limit 1")->fetch();
 if(!$row)exit('该订单号不存在，请返回来源地重新发起请求！');
 	if($type=='alipay')$type='alipay.trade.precreate';//支付宝支付
 	elseif($type=='qqpay')$type='qq.pay.native';//QQ支付

@@ -1,17 +1,23 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: cghang
+ * Date: 2018/7/16
+ * Time: 1:40 AM
+ */
 include("../includes/common.php");
 if($islogin2==1){}else exit("<script language='javascript'>window.location.href='./login.php';</script>");
 $title='用户中心';
+if(!$merchant){showmsg('您还没初始化商户账号,<a href="/user/int.php">点我初始化</a>');exit;}
 include './head.php';
 ?>
 <?php
-$orders=$DB->query("SELECT count(*) from pay_order WHERE pid={$pid}")->fetchColumn();
-
+$orders=$DB->query("SELECT count(*) from pay_order WHERE pid={$pid}")->fetchColumn()?$DB->query("SELECT count(*) from pay_order WHERE pid={$pid}")->fetchColumn():0;
 $lastday=date("Y-m-d",strtotime("-1 day")).' 00:00:00';
 $today=date("Y-m-d").' 00:00:00';
-$order_today=$DB->query("SELECT sum(money) from pay_order where pid={$pid} and status=1 and endtime>='$today'")->fetchColumn();
+$order_today=$DB->query("SELECT sum(money) from pay_order where pid={$pid} and status=1 and endtime>='$today'")->fetchColumn()?$DB->query("SELECT sum(money) from pay_order where pid={$pid} and status=1 and endtime>='$today'")->fetchColumn():0;
 
-$order_lastday=$DB->query("SELECT sum(money) from pay_order where pid={$pid} and status=1 and endtime>='$lastday' and endtime<'$today'")->fetchColumn();
+$order_lastday=$DB->query("SELECT sum(money) from pay_order where pid={$pid} and status=1 and endtime>='$lastday' and endtime<'$today'")->fetchColumn()?$DB->query("SELECT sum(money) from pay_order where pid={$pid} and status=1 and endtime>='$lastday' and endtime<'$today'")->fetchColumn():0;
 
 $rs=$DB->query("SELECT * from pay_settle where pid={$pid} and status=1");
 $settle_money=0;
@@ -27,8 +33,8 @@ while($row = $rs->fetch())
 }
 $chart=substr($chart,0,-1);
 
-if($conf['verifytype']==1 && empty($userrow['phone']))$alertinfo='你还没有绑定密保手机，请&nbsp;<a href="userinfo.php" class="btn btn-sm btn-info">尽快绑定</a>';
-elseif(empty($userrow['email']))$alertinfo='你还没有绑定密保邮箱，请&nbsp;<a href="userinfo.php" class="btn btn-sm btn-info">尽快绑定</a>';
+if($conf['verifytype']==1 && empty($userrow['phone']))$alertinfo= '你还没有绑定密保手机，请&nbsp;<a href="merchant.php" class="btn btn-sm btn-info">尽快绑定</a>';
+elseif(empty($userrow['email']))$alertinfo= '你还没有绑定密保邮箱，请&nbsp;<a href="merchant.php" class="btn btn-sm btn-info">尽快绑定</a>';
 ?>
  <div id="content" class="app-content" role="main">
     <div class="app-content-body ">
@@ -57,7 +63,38 @@ elseif(empty($userrow['email']))$alertinfo='你还没有绑定密保邮箱，请
 <div class="wrapper-md control">
 <!-- stats -->
       <div class="row">
-        <div class="col-md-5">
+          <div class="col-lg-4 col-md-6">
+              <div class="panel b-a">
+                  <div class="panel-heading bg-info dk no-border wrapper-lg"></div>
+                  <div class="text-center m-b clearfix">
+                      <div class="thumb-lg avatar m-t-n-xl">
+                          <img alt="image" class="b b-3x b-white" src="//q4.qlogo.cn/headimg_dl?dst_uin=<?php echo $userrow['qq']?>&spec=100">
+                      </div>
+                      <div class="h4 font-thin m-t-sm"><?php echo $user?></div>
+                  </div>
+                  <li class="list-group-item">
+                      <span class="badge bg-info"><?php echo $merchant['id']?></span>
+                      <i class="fa fa-asterisk fa-fw text-muted"></i> 商户APPID</li>
+                  <li class="list-group-item">
+                      <span class="badge bg-info"><?=$userrow['email']?></span>
+                      <i class="fa fa-jpy fa-fw text-muted"></i>
+                      绑定邮箱：
+                      </a></li>
+                  <li class="list-group-item">
+                      <span class="badge bg-info"><?=$userrow['qq']?></span>
+                      <i class="fa fa-jpy fa-fw text-muted"></i>
+                      绑定QQ：</li>
+                  <li class="list-group-item">
+                      <span class="badge bg-info"><?php echo $merchant['money']?$merchant['money']:'0.00'?></span>
+                      <i class="fa fa-jpy fa-fw text-muted"></i>
+                      商户余额：
+                      </a></li>
+                  </ul>
+                  <div>
+                  </div>
+              </div> </div>
+
+        <div class="col-md-8">
           <div class="row row-sm text-center">
             <div class="col-xs-6">
               <div class="panel padder-v item">
@@ -101,37 +138,38 @@ elseif(empty($userrow['email']))$alertinfo='你还没有绑定密保邮箱，请
                   <div ng-init="d3_3=[60,40]" ui-jq="sparkline" ui-options="[60,40], {type:'pie', height:40, sliceColors:['#fad733','#fff']}" class="sparkline inline"></div>
                 </div>
                 <div class="col dk padder-v r-r">
-                  <div class="text-primary-dk font-thin h1"><span>￥<?php echo $userrow['money']?></span></div>
+                  <div class="text-primary-dk font-thin h1"><span>￥<?php echo $merchant['money']?></span></div>
                   <span class="text-muted text-xs">商户当前余额</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-md-7">
-          <div class="panel wrapper">
-            <label class="i-switch bg-warning pull-right" ng-init="showSpline=true">
-              <input type="checkbox" ng-model="showSpline">
-              <i></i>
-            </label>
-            <h4 class="font-thin m-t-none m-b text-muted">结算统计表</h4>
-            <div ui-jq="plot" ui-refresh="showSpline" ui-options="
-              [
-                { data: [ <?php echo $chart?> ], label:'结算金额', points: { show: true, radius: 1}, splines: { show: true, tension: 0.4, lineWidth: 1, fill: 0.8 } }
-              ], 
-              {
-                colors: ['#23b7e5', '#7266ba'],
-                series: { shadowSize: 3 },
-                xaxis:{ font: { color: '#a1a7ac' } },
-                yaxis:{ font: { color: '#a1a7ac' }, max:<?php echo ($max_settle+10)?> },
-                grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#dce5ec' },
-                tooltip: true,
-                tooltipOpts: { content: '结算金额￥%y',  defaultTheme: false, shifts: { x: 10, y: -25 } }
-              }
-            " style="height:246px" >
-            </div>
-          </div>
-        </div>
+
+                  <!--<div class="col-md-7">
+                    <div class="panel wrapper">
+                      <label class="i-switch bg-warning pull-right" ng-init="showSpline=true">
+                        <input type="checkbox" ng-model="showSpline">
+                        <i></i>
+                      </label>
+                      <h4 class="font-thin m-t-none m-b text-muted">结算统计表</h4>
+                      <div ui-jq="plot" ui-refresh="showSpline" ui-options="
+                        [
+                          { data: [ <?php echo $chart?> ], label:'结算金额', points: { show: true, radius: 1}, splines: { show: true, tension: 0.4, lineWidth: 1, fill: 0.8 } }
+                        ],
+                        {
+                          colors: ['#23b7e5', '#7266ba'],
+                          series: { shadowSize: 3 },
+                          xaxis:{ font: { color: '#a1a7ac' } },
+                          yaxis:{ font: { color: '#a1a7ac' }, max:<?php echo ($max_settle+10)?> },
+                          grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#dce5ec' },
+                          tooltip: true,
+                          tooltipOpts: { content: '结算金额￥%y',  defaultTheme: false, shifts: { x: 10, y: -25 } }
+                        }
+                      " style="height:246px" >
+                      </div>
+                    </div>
+                  </div>-->
       </div>
       <!-- / stats -->
 	<div class="panel panel-default">
@@ -150,7 +188,7 @@ elseif(empty($userrow['email']))$alertinfo='你还没有绑定密保邮箱，请
 				<div class="form-group">
 					<label class="col-sm-2 control-label">商户密钥</label>
 					<div class="col-sm-9">
-						<input class="form-control" type="text" value="<?php echo $userrow['key']?>" disabled>
+						<input class="form-control" type="text" value="<?php echo $merchant['key']?>" disabled>
 					</div>
 				</div>
 				<div class="line line-dashed b-b line-lg pull-in"></div>

@@ -6,7 +6,8 @@ include './head.php';
 
 <?php
 $count1=$DB->query("SELECT count(*) from pay_order")->fetchColumn();
-$count2=$DB->query("SELECT count(*) from pay_user")->fetchColumn();
+$count2=$DB->query("SELECT count(*) from mzf_merchant")->fetchColumn();
+$count3=$DB->query("SELECT count(*) from mzf_user")->fetchColumn();
 $data=unserialize(file_get_contents(SYSTEM_ROOT.'db.txt'));
 $mysqlversion=$DB->query("select VERSION()")->fetch();
 ?>
@@ -14,10 +15,11 @@ $mysqlversion=$DB->query("select VERSION()")->fetch();
       <div class="panel panel-primary">
         <div class="panel-heading"><h3 class="panel-title">后台管理首页</h3></div>
           <ul class="list-group">
-            <li class="list-group-item"><span class="glyphicon glyphicon-stats"></span> <b>订单总数：</b><?php echo $count1?></li>
-			<li class="list-group-item"><span class="glyphicon glyphicon-tint"></span> <b>商户数量：</b><?php echo $count2?></li>
-			<li class="list-group-item"><span class="glyphicon glyphicon-tint"></span> <b>总计余额：</b><?php echo $data['usermoney']?>元（每小时更新一次）</li>
-			<li class="list-group-item"><span class="glyphicon glyphicon-tint"></span> <b>结算余额：</b><?php echo $data['settlemoney']?>元（每小时更新一次）</li>
+            <li class="list-group-item"><span class="glyphicon glyphicon-stats"></span> <b>订单总数：</b><?php echo $count1?> 单</li>
+			<li class="list-group-item"><span class="glyphicon glyphicon-tint"></span> <b>用户数量：</b><?php echo $count3?> 个</li>
+			<li class="list-group-item"><span class="glyphicon glyphicon-tint"></span> <b>商户数量：</b><?php echo $count2?> 个</li>
+			<li class="list-group-item"><span class="glyphicon glyphicon-tint"></span> <b>总计余额：</b><?php echo $data['usermoney']?> 元（每小时更新一次）</li>
+			<li class="list-group-item"><span class="glyphicon glyphicon-tint"></span> <b>结算余额：</b><?php echo $data['settlemoney']?> 元（每小时更新一次）</li>
             <li class="list-group-item"><span class="glyphicon glyphicon-time"></span> <b>现在时间：</b> <?=$date?></li>
 			<li class="list-group-item"><span class="glyphicon glyphicon-home"></span> <a href="../" class="btn btn-xs btn-primary">返回首页</a>
 			</li>

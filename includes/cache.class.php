@@ -11,7 +11,7 @@ class CACHE {
 	public function read() {
 		if(CACHE_FILE==1) return str_replace('<?php exit;//','',file_get_contents($this->file_name));
 		global $DB;
-		$row=$DB->query("SELECT v FROM pay_config WHERE k='cache' limit 1")->fetch();
+		$row=$DB->query("SELECT v FROM mzf_config WHERE k='cache' limit 1")->fetch();
 		return $row['v'];
 	}
 	public function save($value) {
@@ -19,7 +19,7 @@ class CACHE {
 		if(CACHE_FILE==1) return file_put_contents($this->file_name,'<?php exit;//'.$value);
 		global $DB;
 		$value = addslashes($value);
-		return $DB->query("update pay_config set v='$value' where k='cache'")->fetch();
+		return $DB->query("update mzf_config set v='$value' where k='cache'")->fetch();
 	}
 	public function pre_fetch(){
 		global $_CACHE;
@@ -32,7 +32,7 @@ class CACHE {
 	public function update() {
 		global $DB;
 		$cache = array();
-        $query = $DB->query('SELECT * FROM pay_config where 1');
+        $query = $DB->query('SELECT * FROM mzf_config where 1');
 		while($result = $query->fetch()){
 			if($result['k']=='cache') continue;
 			$cache[ $result['k'] ] = $result['v'];
@@ -42,6 +42,6 @@ class CACHE {
 	}
 	public function clear() {
 		global $DB;
-		return $DB->exec("update pay_config set v='' where k='cache'");
+		return $DB->exec("update mzf_config set v='' where k='cache'");
 	}
 }

@@ -4,7 +4,7 @@
   <footer id="footer" class="app-footer" role="footer">
         <div class="wrapper b-t bg-light">
       <span class="pull-right">Powered by <a href="/" target="_blank"><?php echo $conf['web_name']?></a></span>
-    	&copy; 2016-2017 Copyright.
+    	&copy; 2016-2018 Copyright.
     </div>
   </footer>
   <!-- / footer -->

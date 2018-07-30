@@ -3,7 +3,7 @@
  * 登录
 **/
 include("../includes/common.php");
-
+exit('暂停此操作');
 if(isset($_GET['user_id']) && isset($_GET['token'])){
 
 require_once(SYSTEM_ROOT."alipay/alipay.config.php");

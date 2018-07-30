@@ -42,6 +42,10 @@ if ($islogin != 1) {
                         <li><a href="./website.php">网站信息</a></li>
                         <li><a href="./website.php?act=mail">邮箱管理</a></li>
                         <li><a href="./website.php?act=sendsms">发信管理</a></li>
+                        <li><a href="./website.php?act=pay_api">支付接口</a></li>
+                        <li><a href="./website.php?act=pay_fee">结算配置</a></li>
+                        <li><a href="./website.php?act=captcha_api">极验证码</a></li>
+                        <li><a href="./website.php?act=reg">注册管理</a></li>
                         <li><a href="./cloud.php">云平台管理</a><li>
                     </ul>
                 </li>
@@ -53,7 +57,12 @@ if ($islogin != 1) {
                         <li><a href="./slist.php">结算记录</a><li>
                     </ul>
                 </li>
-                <li><a href="./ulist.php"><span class="glyphicon glyphicon-user"></span> 商户管理</a></li>
+                <li>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> 信息管理<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="./ulist.php">用户管理</a></li>
+                        <li><a href="./plist.php?act=mail">商户管理</a></li>
+                    </ul></li>
                 <li><a href="./update.php"><span class="glyphicon glyphicon-open"></span> 在线更新</a></li>
                 <li><a href="./login.php?logout"><span class="glyphicon glyphicon-log-out"></span> 退出登陆</a></li>
             </ul>

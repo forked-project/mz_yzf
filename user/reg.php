@@ -24,30 +24,19 @@ if($conf['is_reg']==0)sysmsg('未开放商户申请');
 <span class="navbar-brand block m-t" id="sitename"><?php echo $conf['web_name']?></span>
 <div class="m-b-lg">
 <div class="wrapper text-center">
-<strong>自助申请商户</strong>
+<strong>自助申请账号</strong>
 </div>
 <form name="form" class="form-validation">
-<?php if($conf['is_payreg']){?><div class="wrapper">商户申请价格为：<b><?php echo $conf['reg_price']?></b>元</div><?php }?>
+<?php if($conf['is_payreg']){?><div class="wrapper">账号注册价格为：<b><?php echo $conf['reg_price']?></b>元</div><?php }?>
 <div class="list-group list-group-sm swaplogin">
+    <div class="list-group-item">
+        <input type="text" name="user" placeholder="登陆账号" class="form-control no-border" required>
+    </div>
+    <div class="list-group-item">
+        <input type="text" name="pwd" placeholder="登陆密码" class="form-control no-border" required>
+    </div>
 <div class="list-group-item">
-<select class="form-control" name="type">
-<?php if($conf['stype_1']){?><option value="1">支付宝结算</option>
-<?php }if($conf['stype_2']){?><option value="2">微信结算</option>
-<?php }if($conf['stype_3']){?><option value="3">QQ钱包结算</option>
-<?php }if($conf['stype_4']){?><option value="4">银行卡结算</option>
-<?php }?></select>
-</div>
-<div class="list-group-item">
-<input type="text" name="account" placeholder="结算账号" class="form-control no-border" required>
-</div>
-<div class="list-group-item">
-<input type="text" name="username" placeholder="真实姓名" class="form-control no-border" required>
-</div>
-<div class="list-group-item">
-<input type="text" name="url" placeholder="你的网站域名" class="form-control no-border" required>
-</div>
-<div class="list-group-item">
-<input type="email" name="email" placeholder="邮箱（用于接收商户信息）" class="form-control no-border" required>
+<input type="email" name="email" placeholder="邮箱" class="form-control no-border" required>
 </div>
 <?php if($conf['verifytype']==1){?>
 <div class="list-group-item">
@@ -80,7 +69,7 @@ if($conf['is_reg']==0)sysmsg('未开放商户申请');
 </div>
 <div class="text-center">
 <p>
-<small class="text-muted"><?php echo $conf['web_name']?><br>&copy; 2016~2017</small>
+<small class="text-muted"><?php echo $conf['web_name']?><br>&copy; 2016~2018</small>
 </p>
 </div>
 </div>
@@ -164,9 +153,9 @@ $(document).ready(function(){
 		var data = $.cookie('mch_info').split("|");
 		layer.open({
 		  type: 1,
-		  title: '你之前申请的商户',
+		  title: '你之前注册的账号',
 		  skin: 'layui-layer-rim',
-		  content: '<li class="list-group-item"><b>商户ID：</b>'+data[0]+'</li><li class="list-group-item"><b>商户密钥：</b>'+data[1]+'</li><li class="list-group-item"><a href="login.php?user='+data[0]+'&pass='+data[1]+'" class="btn btn-default btn-block">返回登录</a></li>'
+		  content: '<li class="list-group-item"><b>登陆账号：</b>'+data[0]+'</li><li class="list-group-item"><b>用户密码：</b>'+data[1]+'</li><li class="list-group-item"><a href="login.php?user='+data[0]+'&pass='+data[1]+'" class="btn btn-default btn-block">返回登录</a></li>'
 		});
 	}
 	$("#sendcode").click(function(){
@@ -194,35 +183,20 @@ $(document).ready(function(){
 	});
 	$("#submit").click(function(){
 		if ($(this).attr("data-lock") === "true") return;
-		var type=$("select[name='type']").val();
-		var account=$("input[name='account']").val();
-		var username=$("input[name='username']").val();
-		var url=$("input[name='url']").val();
+		var user=$("input[name='user']").val();
+		var pwd=$("input[name='pwd']").val();
 		var email=$("input[name='email']").val();
 		var phone=$("input[name='phone']").val();
 		var code=$("input[name='code']").val();
-		if(account=='' || username=='' || url=='' || email=='' || phone=='' || code==''){layer.alert('请确保各项不能为空！');return false;}
+		if(user=='' || pwd=='' || email=='' || phone=='' || code==''){layer.alert('请确保各项不能为空！');return false;}
 		var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
 		if(!reg.test(email)){layer.alert('邮箱格式不正确！');return false;}
-		if (url.indexOf(" ")>=0){
-			url = url.replace(/ /g,"");
-		}
-		if (url.toLowerCase().indexOf("http://")==0){
-			url = url.slice(7);
-		}
-		if (url.toLowerCase().indexOf("https://")==0){
-			url = url.slice(8);
-		}
-		if (url.slice(url.length-1)=="/"){
-			url = url.slice(0,url.length-1);
-		}
-		$("input[name='url']").val(url);
 		var ii = layer.load(2, {shade:[0.1,'#fff']});
 		$(this).attr("data-lock", "true");
 		$.ajax({
 			type : "POST",
 			url : "ajax.php?act=reg",
-			data : {type:type,account:account,username:username,url:url,email:email,phone:phone,code:code},
+			data : {user:user,pwd:pwd,email:email,phone:phone,code:code},
 			dataType : 'json',
 			success : function(data) {
 				$("#submit").attr("data-lock", "false");
@@ -230,9 +204,9 @@ $(document).ready(function(){
 				if(data.code == 1){
 					layer.open({
 					  type: 1,
-					  title: '商户申请成功',
+					  title: '账号注册成功',
 					  skin: 'layui-layer-rim',
-					  content: '<li class="list-group-item"><b>商户ID：</b>'+data.pid+'</li><li class="list-group-item"><b>商户密钥：</b>'+data.key+'</li><li class="list-group-item">以上商户信息已经发送到您的邮箱中</li><li class="list-group-item"><a href="login.php?user='+data.pid+'&pass='+data.key+'" class="btn btn-default btn-block">返回登录</a></li>'
+					  content: '<li class="list-group-item"><b>登陆账号：</b>'+data.pid+'</li><li class="list-group-item"><b>用户密码：</b>'+data.key+'</li><li class="list-group-item">以上信息已经发送到您的邮箱中</li><li class="list-group-item"><a href="login.php?user='+data.pid+'&pass='+data.key+'" class="btn btn-default btn-block">返回登录</a></li>'
 					});
 					var mch_info = data.pid+"|"+data.key;
 					$.cookie('mch_info', mch_info);
