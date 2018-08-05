@@ -21,7 +21,7 @@ if(isset($_GET['batch'])){
 		while($row = $rs->fetch())
 		{
 			$dcmoney=$row['money']+$row['fee'];
-			$DB->exec("update `pay_user` set `money`=`money`-'{$dcmoney}',`apply`='0' where `id`='{$row['pid']}'");
+			$DB->exec("update `mzf_merchant` set `money`=`money`-'{$dcmoney}',`apply`='0' where `id`='{$row['pid']}'");
 			$DB->exec("update `pay_settle` set `status`='1' where `id`='{$row['id']}'");
 		}
 		$DB->exec("update `pay_batch` set `status`='1' where `batch`='{$batch}'");

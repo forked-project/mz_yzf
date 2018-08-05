@@ -23,6 +23,7 @@ if ($sign == $_GET['sign']) {
         $trade_no = $_GET['trade_no'];
         $trade_status = $_GET['trade_status'];
         $srow = $DB->query("SELECT * FROM pay_order WHERE trade_no='{$out_trade_no}' limit 1")->fetch();
+        if($srow['status'] == '1'){ exit('success');}
         if ($_GET['trade_status'] == 'TRADE_SUCCESS') {
             $DB->query("update `pay_order` set `status` ='1',`endtime` ='$date',`buyer` ='$buyer_email' where `trade_no`='$out_trade_no'");
             $addmoney = round($srow['money'] * $conf['money_rate'] / 100, 2);

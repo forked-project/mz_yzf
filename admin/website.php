@@ -130,7 +130,8 @@ if ($mod == 'website_post' && $_POST['do'] == 'submit') {
     $is_reg = $_POST['is_reg'];
     $is_payreg = $_POST['is_payreg'];
     $reg_pid = $_POST['reg_pid'];
-    $reg_price = $_POST['verifytype'];
+    $verifytype = $_POST['verifytype'];
+    $reg_price = $_POST['reg_price'];
     $stype_1 = $_POST['stype_1'];
     $stype_2 = $_POST['stype_2'];
     $stype_3 = $_POST['stype_3'];
@@ -139,6 +140,7 @@ if ($mod == 'website_post' && $_POST['do'] == 'submit') {
     saveSetting('is_reg', $is_reg);
     saveSetting('is_payreg', $is_payreg);
     saveSetting('reg_pid', $reg_pid);
+    saveSetting('reg_price', $reg_price);
     saveSetting('verifytype', $verifytype);
     saveSetting('stype_1', $stype_1);
     saveSetting('stype_2', $stype_2);
