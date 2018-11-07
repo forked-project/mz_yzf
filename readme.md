@@ -1,10 +1,15 @@
->拇指付易支付演示：http://demo.pay.mzhipay.com
+>拇指付个人支付个人收款码支付演示：//www.mzhipay.cn   个人软件实时生成二维码 
 
->拇指付：https://www.mzhipay.com/
+>拇指付：https://www.mzhipay.com/  此为签约官方支付 
 
->新上线码支付演示：http://demo.code.mzhipay.com/ 
+>新上线码支付演示：http://demo.code.mzhipay.com/   死码支付
 
-上为独立平台 目前有3合1监控软件 微信 qq 支付宝
+//上为独立平台 目前有3合1监控软件 微信 qq 支付宝
+
+
+现在此项目已停止更新 主做个人支付收款码支付
+0.5费率 量大接入 成功率高  掉单率低 如需开户请联系QQ 
+
 
 拇指付码支付已接入：
 安卓监控 耗电量少 成功率高 支持微信 支付宝
